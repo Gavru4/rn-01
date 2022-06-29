@@ -22,10 +22,10 @@ const initialState = {
   password: "",
 };
 
-export default function RegistrationScreen() {
+export default function RegistrationScreen({ navigation }) {
   const [form, setForm] = useState(initialState);
   const [inputFocus, setInputFocus] = useState(false);
-  const [isReady, setIsReady] = useState(false);
+
   const [isSecureEntry, setIsSecureEntry] = useState(false);
 
   const [dimensions, setDimensions] = useState(
@@ -136,7 +136,11 @@ export default function RegistrationScreen() {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity activeOpacity={0.8} style={styles.singInBtn}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.singInBtn}
+                onPress={() => navigation.navigate("Login")}
+              >
                 <Text style={styles.singInBtnText}>
                   Уже есть аккаунт? Войти
                 </Text>

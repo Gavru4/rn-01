@@ -22,7 +22,7 @@ const initialState = {
   password: "",
 };
 
-export default function RegistrationScreen() {
+export default function LoginScreen({ navigation }) {
   const [form, setForm] = useState(initialState);
   const [inputFocus, setInputFocus] = useState(false);
   //   const [isReady, setIsReady] = useState(false);
@@ -51,7 +51,7 @@ export default function RegistrationScreen() {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={-160}
+        keyboardVerticalOffset={-227}
         style={styles.container}
       >
         <View style={styles.container}>
@@ -67,9 +67,6 @@ export default function RegistrationScreen() {
                 // })
               }
             >
-              <View style={styles.imgWrap}>
-                <Image />
-              </View>
               <View style={styles.headWrap}>
                 <Text style={styles.head}>Login</Text>
               </View>
@@ -122,7 +119,11 @@ export default function RegistrationScreen() {
                 </View>
               </TouchableOpacity>
 
-              <TouchableOpacity activeOpacity={0.8} style={styles.singInBtn}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                style={styles.singInBtn}
+                onPress={() => navigation.navigate("Register")}
+              >
                 <Text style={styles.singInBtnText}>
                   Нет аккаунта? Зарегистрироваться
                 </Text>
@@ -151,23 +152,12 @@ const styles = StyleSheet.create({
   formWrap: {
     width: "100%",
     marginHorizontal: 32,
-    paddingTop: 90,
-    paddingBottom: 75,
+    paddingTop: 32,
+    paddingBottom: 140,
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
 
     backgroundColor: "#fff",
-  },
-
-  imgWrap: {
-    position: "absolute",
-    width: 120,
-    height: 120,
-    left: 128,
-    top: -60,
-
-    backgroundColor: "#F6F6F6",
-    borderRadius: 16,
   },
 
   headWrap: {
