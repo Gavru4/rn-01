@@ -18,8 +18,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { View } from "react-native-web";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+// import { View } from "react-native-web";
+// import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export const useRoute = (isAuth) => {
   if (!isAuth) {
@@ -55,11 +55,6 @@ export const useRoute = (isAuth) => {
         component={PostsScreen}
         options={{
           tabBarIcon: ({ focused, size, color }) => {
-            console.log("focused :>> ", focused);
-            console.log("color :>> ", color);
-            {
-              // focused ? (color = "red") : (color = "#FF6C00");
-            }
             return (
               <Ionicons
                 name="grid-outline"
@@ -103,7 +98,6 @@ export const useRoute = (isAuth) => {
 const styles = StyleSheet.create({
   addBtnWrap: {
     flex: 1,
-    // height: 10,
     width: 70,
     justifyContent: "center",
     alignItems: "center",
