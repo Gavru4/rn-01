@@ -1,5 +1,10 @@
+import React from "react";
+import { StyleSheet } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
+const AuthStack = createStackNavigator();
+const MainTab = createBottomTabNavigator();
 
 import RegistrationScreen from "./Screens/auth/RegistrationScreen";
 import LoginScreen from "./Screens/auth/LoginScreen";
@@ -11,9 +16,10 @@ import ProfileScreen from "./Screens/main/ProfileScreen";
 // import icons
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-
-const AuthStack = createStackNavigator();
-const MainTab = createBottomTabNavigator();
+import { Entypo } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { View } from "react-native-web";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export const useRoute = (isAuth) => {
   if (!isAuth) {
@@ -37,30 +43,72 @@ export const useRoute = (isAuth) => {
     );
   }
   return (
-    <MainTab.Navigator tabBarOptions={{ showLabel: false }}>
+    <MainTab.Navigator
+      paddingTop="10"
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarStyle: { paddingTop: 10 },
+      }}
+    >
       <MainTab.Screen
         name="Posts"
         component={PostsScreen}
         options={{
           tabBarIcon: ({ focused, size, color }) => {
-            <Ionicons
-              name="grid-outline"
-              size={24}
-              color={"rgba(33, 33, 33, 0.8)"}
-            />;
+            console.log("focused :>> ", focused);
+            console.log("color :>> ", color);
+            {
+              // focused ? (color = "red") : (color = "#FF6C00");
+            }
+            return (
+              <Ionicons
+                name="grid-outline"
+                size={24}
+                color="rgba(33, 33, 33, 0.8)"
+              />
+            );
           },
         }}
       />
-      <MainTab.Screen name="CreatePosts" component={CreatePostsScreen} />
+      <MainTab.Screen
+        name="CreatePosts"
+        component={CreatePostsScreen}
+        style={styles.container}
+        options={{
+          tabBarIcon: ({ focused, size, color }) => {
+            return (
+              <TouchableOpacity style={styles.addBtnWrap}>
+                <Entypo name="plus" size={24} color="#FFFFFF" />
+              </TouchableOpacity>
+            );
+          },
+        }}
+      />
+
       <MainTab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{
           tabBarIcon: ({ focused, size, color }) => {
-            <Feather name="user" size={size} color={color} />;
+            return (
+              <Feather name="user" size={24} color="rgba(33, 33, 33, 0.8)" />
+            );
           },
         }}
       />
     </MainTab.Navigator>
   );
 };
+
+const styles = StyleSheet.create({
+  addBtnWrap: {
+    flex: 1,
+    // height: 10,
+    width: 70,
+    justifyContent: "center",
+    alignItems: "center",
+
+    borderRadius: 20,
+    backgroundColor: "#FF6C00",
+  },
+});

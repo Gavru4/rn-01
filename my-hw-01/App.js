@@ -1,5 +1,5 @@
 import * as Font from "expo-font";
-import { useState } from "react";
+import React, { useState } from "react";
 import AppLoading from "expo-app-loading";
 import { NavigationContainer } from "@react-navigation/native";
 import { useRoute } from "./router";
