@@ -1,6 +1,7 @@
 import React from "react";
 import { StatusBar } from "expo-status-bar";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 
 import {
   ImageBackground,
@@ -16,6 +17,7 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
 } from "react-native";
+import { authSignInUser } from "../../redux/auth/authOperation";
 
 const initialState = {
   login: "",
@@ -26,13 +28,16 @@ const initialState = {
 export default function RegistrationScreen({ navigation }) {
   const [form, setForm] = useState(initialState);
   const [inputFocus, setInputFocus] = useState(false);
-
   const [isSecureEntry, setIsSecureEntry] = useState(false);
 
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window") - 16 * 2
   );
+
+  const dispatch = useDispatch();
+
   const onRegisterBtnPress = () => {
+    dispatch(authSignInUser(form));
     setForm(initialState);
   };
 
