@@ -32,7 +32,8 @@
     "react-native-maps": "0.30.2",
     "expo-location": "~14.2.2",
     "expo-camera": "~12.2.0",
-    "expo-media-library": "~14.1.0"
+    "expo-media-library": "~14.1.0",
+    "expo-splash-screen": "~0.15.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
