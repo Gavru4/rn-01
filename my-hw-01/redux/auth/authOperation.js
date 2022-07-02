@@ -1,16 +1,45 @@
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  getAuth,
+} from "firebase/auth";
 import { auth } from "../../firebase/config.js";
+import { updateUserProfile } from "./authReducer.js";
 
 export const authSignInUser =
-  ({ login, email, password }) =>
+  ({ email, password }) =>
   async (dispatch, getState) => {
-    console.log("email :>> ", email);
     try {
-      const user = await createUserWithEmailAndPassword(auth, email, password);
-      console.log("user :>> ", user);
+      const user = await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       console.log(error.message);
     }
   };
-export const authSignUpUser = () => async (dispatch, getState) => {};
-export const authSignOutUser = () => async (dispatch, getState) => {};
+export const authSignUpUser =
+  ({ login, email, password }) =>
+  async (dispatch, getState) => {
+    try {
+      const { user } = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      await (user.displayName = login);
+
+      dispatch(
+        updateUserProfile({ userId: user.uid, nickname: user.displayName })
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+export const authSignOutUser = () => async (dispatch, getState) => {
+  try {
+    await signOut(auth);
+  } catch (error) {
+    console.log(error.message);
+  }
+};

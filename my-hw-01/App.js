@@ -5,6 +5,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { useRoute } from "./router";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "./firebase/config.js";
 
 const loadFonts = async () => {
   await Font.loadAsync({
@@ -16,7 +18,11 @@ const loadFonts = async () => {
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
-  const routing = useRoute(false);
+  const [user, setUser] = useState(null);
+
+  onAuthStateChanged(auth, (currentUser) => setUser(currentUser));
+
+  const routing = useRoute(user);
 
   if (!isReady) {
     return (

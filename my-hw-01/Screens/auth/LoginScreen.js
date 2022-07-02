@@ -16,6 +16,8 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
 } from "react-native";
+import { useDispatch } from "react-redux";
+import { authSignInUser } from "../../redux/auth/authOperation";
 
 const initialState = {
   login: "",
@@ -27,12 +29,15 @@ export default function LoginScreen({ navigation }) {
   const [form, setForm] = useState(initialState);
   const [inputFocus, setInputFocus] = useState(false);
   //   const [isReady, setIsReady] = useState(false);
-  const [isSecureEntry, setIsSecureEntry] = useState(false);
+  const [isSecureEntry, setIsSecureEntry] = useState(true);
+
+  const dispatch = useDispatch();
 
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window") - 16 * 2
   );
-  const onRegisterBtnPress = () => {
+  const onLoginBtnPress = () => {
+    dispatch(authSignInUser(form));
     setForm(initialState);
   };
 
@@ -45,6 +50,7 @@ export default function LoginScreen({ navigation }) {
     Dimensions.addEventListener("change", onChange);
     return () => {
       Dimensions.removeEventListener("change", onChange);
+      // Dimensions.remove();
     };
   }, []);
 
@@ -60,14 +66,7 @@ export default function LoginScreen({ navigation }) {
             style={styles.backgroundImage}
             source={require("../../assets/images/photoBG.jpg")}
           >
-            <View
-              style={
-                styles.formWrap
-                // {
-                //   width: dimensions,
-                // })
-              }
-            >
+            <View style={styles.formWrap}>
               <View style={styles.headWrap}>
                 <Text style={styles.head}>Login</Text>
               </View>
@@ -111,7 +110,7 @@ export default function LoginScreen({ navigation }) {
                 </TouchableOpacity>
               </View>
               <TouchableOpacity
-                onPress={onRegisterBtnPress}
+                onPress={onLoginBtnPress}
                 activeOpacity={0.8}
                 style={styles.registerBtn}
               >
@@ -126,7 +125,7 @@ export default function LoginScreen({ navigation }) {
                 onPress={() => navigation.navigate("Register")}
               >
                 <Text style={styles.singInBtnText}>
-                  Нет аккаунта? Зарегистрироваться
+                  Don't have an account? Register
                 </Text>
               </TouchableOpacity>
             </View>

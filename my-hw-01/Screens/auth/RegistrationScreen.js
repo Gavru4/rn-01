@@ -17,7 +17,7 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
 } from "react-native";
-import { authSignInUser } from "../../redux/auth/authOperation";
+import { authSignUpUser } from "../../redux/auth/authOperation";
 
 const initialState = {
   login: "",
@@ -28,7 +28,7 @@ const initialState = {
 export default function RegistrationScreen({ navigation }) {
   const [form, setForm] = useState(initialState);
   const [inputFocus, setInputFocus] = useState(false);
-  const [isSecureEntry, setIsSecureEntry] = useState(false);
+  const [isSecureEntry, setIsSecureEntry] = useState(true);
 
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window") - 16 * 2
@@ -37,7 +37,7 @@ export default function RegistrationScreen({ navigation }) {
   const dispatch = useDispatch();
 
   const onRegisterBtnPress = () => {
-    dispatch(authSignInUser(form));
+    dispatch(authSignUpUser(form));
     setForm(initialState);
   };
 
@@ -50,6 +50,7 @@ export default function RegistrationScreen({ navigation }) {
     Dimensions.addEventListener("change", onChange);
     return () => {
       Dimensions.removeEventListener("change", onChange);
+      // Dimensions.remove();
     };
   }, []);
 
@@ -65,14 +66,7 @@ export default function RegistrationScreen({ navigation }) {
             style={styles.backgroundImage}
             source={require("../../assets/images/photoBG.jpg")}
           >
-            <View
-              style={
-                styles.formWrap
-                // {
-                //   width: dimensions,
-                // })
-              }
-            >
+            <View style={styles.formWrap}>
               <View style={styles.imgWrap}>
                 <Image />
               </View>
@@ -148,7 +142,7 @@ export default function RegistrationScreen({ navigation }) {
                 onPress={() => navigation.navigate("Login")}
               >
                 <Text style={styles.singInBtnText}>
-                  Уже есть аккаунт? Войти
+                  Already have an account? To come in
                 </Text>
               </TouchableOpacity>
             </View>
