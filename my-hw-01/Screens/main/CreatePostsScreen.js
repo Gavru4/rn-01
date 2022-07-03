@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -32,8 +32,8 @@ export default function CreatePostsScreen({ navigation }) {
       const { uri } = await cameraRef.takePictureAsync();
       setPhoto(uri);
     }
-    // const location = await Location.getCurrentPositionAsync({});
-    // console.log("location :>> ", location);
+    const location = await Location.getCurrentPositionAsync({});
+    console.log("location :>> ", location);
   };
   useEffect(() => {
     (async () => {
@@ -51,7 +51,7 @@ export default function CreatePostsScreen({ navigation }) {
   }, []);
 
   const sendPhoto = () => {
-    navigation.navigate("PostsDefaultScreen", { photo });
+    navigation.navigate("DefaultScreen", { photo });
     setPhoto(null);
   };
 
