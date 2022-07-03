@@ -26,8 +26,6 @@ const PostsScreen = () => {
                 style={styles.logOut}
                 onPress={() => {
                   dispatch(authSignOutUser());
-
-                  console.log("fggfh :>> ");
                 }}
               >
                 <Feather name="log-out" size={24} color="#BDBDBD" />

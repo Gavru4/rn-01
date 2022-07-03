@@ -30,6 +30,8 @@ export const authSignUpUser =
 
       await (user.displayName = login);
 
+      console.log("user.displayName :>> ", user.displayName);
+
       dispatch(
         updateUserProfile({ userId: user.uid, nickname: user.displayName })
       );
