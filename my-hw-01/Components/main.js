@@ -1,21 +1,29 @@
 // import * as Font from "expo-font";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { useRoute } from "../router";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { store } from "./redux/store";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../firebase/config";
+// import { onAuthStateChanged } from "firebase/auth";
+// import { auth } from "../firebase/config";
+import { authStateChangeUser } from "../redux/auth/authOperation";
+import { stateChangeUser } from "../redux/auth/authSelectors";
 
 const Main = () => {
-  const [user, setUser] = useState(null);
+  //   const [user, setUser] = useState(null);
 
-  const state = useSelector((state) => state);
+  const changeUser = useSelector(stateChangeUser);
+  console.log("changeUser :>> ", changeUser);
+  const dispatch = useDispatch();
 
-  onAuthStateChanged(auth, (currentUser) => setUser(currentUser));
+  //   onAuthStateChanged(auth, (currentUser) => setUser(currentUser));
 
-  const routing = useRoute(user);
+  const routing = useRoute(changeUser);
+
+  useEffect(() => {
+    dispatch(authStateChangeUser());
+  }, []);
 
   return <NavigationContainer>{routing}</NavigationContainer>;
 };

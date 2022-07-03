@@ -5,8 +5,9 @@ import {
   getAuth,
 } from "firebase/auth";
 import { auth } from "../../firebase/config.js";
-import { updateUserProfile } from "./authReducer.js";
+import { updateUserProfile, authStateChange } from "./authReducer.js";
 import { onAuthStateChanged } from "firebase/auth";
+import { authSignOut } from "../../redux/auth/authReducer";
 
 export const authSignInUser =
   ({ email, password }) =>
@@ -40,13 +41,24 @@ export const authSignUpUser =
 export const authSignOutUser = () => async (dispatch, getState) => {
   try {
     await signOut(auth);
+    dispatch(authSignOut());
   } catch (error) {
     console.log(error.message);
   }
 };
 export const authStateChangeUser = () => async (dispatch, getState) => {
   try {
-    await onAuthStateChanged(auth, (currentUser) => setUser(currentUser));
+    await onAuthStateChanged(auth, (currentUser) => {
+      if (currentUser) {
+        dispatch(
+          updateUserProfile({
+            userId: currentUser.uid,
+            nickname: currentUser.displayName,
+          })
+        );
+        dispatch(authStateChange({ stateChangeUser: true }));
+      }
+    });
   } catch (error) {
     console.log(error.message);
   }
