@@ -10,6 +10,10 @@ import {
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 
+import { getStorage, ref } from "firebase/storage";
+
+import { auth } from "../../firebase/config";
+
 // import * as MediaLibrary from "expo-media-library";
 // const [type, setType] = useState(Camera.Constants.Type.back);
 // const [camera, setCamera] = useState(null);
@@ -21,7 +25,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 export default function CreatePostsScreen({ navigation }) {
-  const [hasPermission, setHasPermission] = useState(null);
+  // const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
 
   const [photo, setPhoto] = useState(null);
@@ -29,12 +33,18 @@ export default function CreatePostsScreen({ navigation }) {
 
   const takePhoto = async () => {
     if (cameraRef) {
-      const { uri } = await cameraRef.takePictureAsync();
-      setPhoto(uri);
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      if (status === "granted") {
+        const { uri } = await cameraRef.takePictureAsync();
+
+        await setPhoto(uri);
+        const location = await Location.getCurrentPositionAsync({});
+      } else {
+        Alert.alert("Access denied");
+      }
     }
-    const location = await Location.getCurrentPositionAsync({});
-    console.log("location :>> ", location);
   };
+
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -50,7 +60,22 @@ export default function CreatePostsScreen({ navigation }) {
     })();
   }, []);
 
+  const uploadPhoto = async () => {
+    const response = await fetch(photo);
+
+    const file = await response.blob();
+
+    const uniquePostId = Date.now().toString();
+
+    const storage = getStorage(auth);
+
+    const pathReference = await ref(storage, `images/${file}`);
+
+    console.log("pathReference :>> ", pathReference);
+  };
+
   const sendPhoto = () => {
+    uploadPhoto();
     navigation.navigate("DefaultScreen", { photo });
     setPhoto(null);
   };

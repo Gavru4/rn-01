@@ -18,6 +18,7 @@ export const authSignInUser =
       console.log(error.message);
     }
   };
+
 export const authSignUpUser =
   ({ login, email, password }) =>
   async (dispatch, getState) => {
@@ -48,6 +49,7 @@ export const authSignOutUser = () => async (dispatch, getState) => {
     console.log(error.message);
   }
 };
+
 export const authStateChangeUser = () => async (dispatch, getState) => {
   try {
     await onAuthStateChanged(auth, (currentUser) => {
