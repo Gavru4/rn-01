@@ -3,8 +3,9 @@ import {
   signInWithEmailAndPassword,
   signOut,
   getAuth,
+  updateProfile,
 } from "firebase/auth";
-import { auth } from "../../firebase/config.js";
+import { auth, test } from "../../firebase/config.js";
 import { updateUserProfile, authStateChange } from "./authReducer.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { authSignOut } from "../../redux/auth/authReducer";
@@ -28,13 +29,12 @@ export const authSignUpUser =
         email,
         password
       );
-
-      await (user.displayName = login);
-
-      console.log("user.displayName :>> ", user.displayName);
-
+      const test = getAuth();
+      await updateProfile(test.currentUser, {
+        displayName: login,
+      });
       dispatch(
-        updateUserProfile({ userId: user.uid, nickname: user.displayName })
+        updateUserProfile({ userId: user.uid, nickName: user.displayName })
       );
     } catch (error) {
       console.log(error.message);
@@ -57,7 +57,7 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
         dispatch(
           updateUserProfile({
             userId: currentUser.uid,
-            nickname: currentUser.displayName,
+            nickName: currentUser.displayName,
           })
         );
         dispatch(authStateChange({ stateChangeUser: true }));

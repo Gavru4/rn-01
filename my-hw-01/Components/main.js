@@ -10,12 +10,11 @@ const Main = () => {
   const changeUser = useSelector(stateChangeUser);
   const dispatch = useDispatch();
 
-  const routing = useRoute(changeUser);
-
   useEffect(() => {
     dispatch(authStateChangeUser());
   }, []);
 
+  const routing = useRoute(changeUser);
   return <NavigationContainer>{routing}</NavigationContainer>;
 };
 

@@ -10,11 +10,7 @@ import {
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
 // import storage from "@react-native-firebase/storage"; // 1
-
-import { getStorage, ref } from "firebase/storage";
-
 import { firestore, storage } from "../../firebase/config";
-
 // import * as MediaLibrary from "expo-media-library";
 // const [type, setType] = useState(Camera.Constants.Type.back);
 // const [camera, setCamera] = useState(null);
@@ -22,21 +18,26 @@ import { firestore, storage } from "../../firebase/config";
 import { TextInput, TouchableOpacity } from "react-native-gesture-handler";
 import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-
 import { FontAwesome5 } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
+import { getUserId, getUserNickName } from "../../redux/auth/authSelectors";
 
 export default function CreatePostsScreen({ navigation }) {
   // const { userId, userName, avatar } = useSelector((state) => state.user);
-  const [type, setType] = useState(Camera.Constants.Type.back);
-  const [takePhoto, setTakePhoto] = useState("");
-
-  const [modalVisible, setModalVisible] = useState(false);
-  const [postTitle, setPostTitle] = useState("");
+  // const [type, setType] = useState(Camera.Constants.Type.back);
+  // const [takePhoto, setTakePhoto] = useState("");
+  // const [modalVisible, setModalVisible] = useState(false);
+  // const [postTitle, setPostTitle] = useState("");
   // const [hasPermission, setHasPermission] = useState(null);
+  const userId = useSelector(getUserId);
+  const nickName = useSelector(getUserNickName);
+
+  console.log("userId :>> ", userId);
+  console.log("nickName :>> ", nickName);
   const [cameraRef, setCameraRef] = useState(null);
 
   const [photo, setPhoto] = useState(null);
+  const [comment, setComment] = useState("");
   const [location, setLocation] = useState({});
 
   const takeUserPhoto = async () => {
@@ -56,10 +57,12 @@ export default function CreatePostsScreen({ navigation }) {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
+
       if (status !== "granted") {
-        setErrorMsg("Permission to access location was denied");
+        console.log("Permission to access location was denied");
         return;
       }
+
       const location = await Location.getCurrentPositionAsync({});
       setLocation({
         latitude: location.coords.latitude,
@@ -68,7 +71,6 @@ export default function CreatePostsScreen({ navigation }) {
     })();
   }, []);
 
-  console.log("photofdewf :>> ", photo);
   // const snap = async () => {
   //   if (takePhoto) {
   //     let file = await takePhoto.takePictureAsync();
@@ -77,7 +79,7 @@ export default function CreatePostsScreen({ navigation }) {
   //   }
   // };
 
-  const uploadStorage = async () => {
+  const uploadPhotoToServer = async () => {
     // setModalVisible(!modalVisible);
     if (photo) {
       const response = await fetch(photo);
@@ -91,30 +93,31 @@ export default function CreatePostsScreen({ navigation }) {
         .child(uniqueId)
         .getDownloadURL();
 
-      createPost(photoUrl);
+      return photoUrl;
     } else Alert.alert("No photo");
     // setPostTitle("");
   };
 
-  const createPost = async (img) => {
-    let location = await Location.getCurrentPositionAsync({});
-    await firestore.collection("posts").add({
-      image: img,
-      postTitle: postTitle,
-      avatar,
+  const createPost = async () => {
+    const userPhotoUrl = await uploadPhotoToServer();
+
+    // let location = await Location.getCurrentPositionAsync({});
+    const createUserPost = await firestore.collection("posts").add({
+      // image: img,
+      userPhotoUrl,
+      comment,
       userId,
-      userName,
-      location: {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      },
+      nickName,
+      location,
     });
+    return createUserPost;
   };
 
   const sendPhoto = async () => {
-    await uploadStorage();
+    console.log("createPost() :>> ", createPost());
+    await createPost();
     navigation.navigate("DefaultScreen", { photo });
-    setPhoto(null);
+    // setPhoto(null);
   };
 
   return (
@@ -148,11 +151,9 @@ export default function CreatePostsScreen({ navigation }) {
       <View>
         <TextInput
           style={styles.input}
-          placeholder={"Name"}
+          placeholder={"Name..."}
           placeholderTextColor="#BDBDBD"
-          // onChangeText={(value) =>
-          //   setstate((prevState) => ({ ...prevState, email: value }))
-          // }
+          onChangeText={setComment}
           // onFocus={()=>{setIsShowKeyboard(true)}}
         />
         <View style={styles.locationInputWrap}>
