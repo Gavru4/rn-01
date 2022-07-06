@@ -9,10 +9,11 @@ import {
 
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
+// import storage from "@react-native-firebase/storage"; // 1
 
 import { getStorage, ref } from "firebase/storage";
 
-import { auth } from "../../firebase/config";
+import { firestore, storage } from "../../firebase/config";
 
 // import * as MediaLibrary from "expo-media-library";
 // const [type, setType] = useState(Camera.Constants.Type.back);
@@ -23,15 +24,22 @@ import { Feather } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
 
 export default function CreatePostsScreen({ navigation }) {
+  // const { userId, userName, avatar } = useSelector((state) => state.user);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [takePhoto, setTakePhoto] = useState("");
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [postTitle, setPostTitle] = useState("");
   // const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
 
   const [photo, setPhoto] = useState(null);
   const [location, setLocation] = useState({});
 
-  const takePhoto = async () => {
+  const takeUserPhoto = async () => {
     if (cameraRef) {
       const { status } = await Camera.requestCameraPermissionsAsync();
       if (status === "granted") {
@@ -60,22 +68,51 @@ export default function CreatePostsScreen({ navigation }) {
     })();
   }, []);
 
-  const uploadPhoto = async () => {
-    const response = await fetch(photo);
+  console.log("photofdewf :>> ", photo);
+  // const snap = async () => {
+  //   if (takePhoto) {
+  //     let file = await takePhoto.takePictureAsync();
+  //     setTakePhoto(file.uri);
+  //     setModalVisible(true);
+  //   }
+  // };
 
-    const file = await response.blob();
+  const uploadStorage = async () => {
+    // setModalVisible(!modalVisible);
+    if (photo) {
+      const response = await fetch(photo);
+      const file = await response.blob();
 
-    const uniquePostId = Date.now().toString();
+      const uniqueId = Date.now().toString();
+      await storage.ref(`image/${uniqueId}`).put(file);
 
-    const storage = getStorage(auth);
+      const photoUrl = await storage
+        .ref("image")
+        .child(uniqueId)
+        .getDownloadURL();
 
-    const pathReference = await ref(storage, `images/${file}`);
-
-    console.log("pathReference :>> ", pathReference);
+      createPost(photoUrl);
+    } else Alert.alert("No photo");
+    // setPostTitle("");
   };
 
-  const sendPhoto = () => {
-    uploadPhoto();
+  const createPost = async (img) => {
+    let location = await Location.getCurrentPositionAsync({});
+    await firestore.collection("posts").add({
+      image: img,
+      postTitle: postTitle,
+      avatar,
+      userId,
+      userName,
+      location: {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      },
+    });
+  };
+
+  const sendPhoto = async () => {
+    await uploadStorage();
     navigation.navigate("DefaultScreen", { photo });
     setPhoto(null);
   };
@@ -100,7 +137,7 @@ export default function CreatePostsScreen({ navigation }) {
         <View style={styles.photoView}>
           <TouchableOpacity
             style={styles.cameraBtnWrap}
-            onPress={() => takePhoto()}
+            onPress={() => takeUserPhoto()}
           >
             <MaterialIcons name="photo-camera" size={24} color="red" />
           </TouchableOpacity>
