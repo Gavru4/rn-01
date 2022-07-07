@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   StyleSheet,
   TextInput,
   Image,
+  Text,
   TouchableOpacity,
+  FlatList,
+  SafeAreaView,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { firestore } from "../../firebase/config";
@@ -15,7 +18,12 @@ const CommentsScreen = ({ route }) => {
   const { postId, uri } = route.params;
 
   const [comment, setComment] = useState("");
+  const [allComments, setAllComments] = useState([]);
   const nickName = useSelector(getUserNickName);
+
+  useEffect(() => {
+    getAllComments();
+  }, []);
 
   const createComments = async () => {
     await firestore
@@ -26,11 +34,33 @@ const CommentsScreen = ({ route }) => {
     await setComment("");
   };
 
+  const getAllComments = async () => {
+    await firestore
+      .collection("posts")
+      .doc(postId)
+      .collection("comments")
+      .onSnapshot((data) =>
+        setAllComments(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      );
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.userPhotoWrap}>
         <Image source={{ uri }} style={styles.userPhoto} />
       </View>
+      <SafeAreaView style={styles.flatListContainer}>
+        <FlatList
+          data={allComments}
+          renderItem={({ item }) => (
+            <View style={styles.commentContainer}>
+              <Text>{item.nickName}</Text>
+              <Text>{item.comment}</Text>
+            </View>
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      </SafeAreaView>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -66,6 +96,15 @@ const styles = StyleSheet.create({
 
     borderRadius: 8,
   },
+  commentContainer: {
+    width: 300,
+    marginBottom: 24,
+    padding: 15,
+
+    backgroundColor: "rgba(0, 0, 0, 0.03)",
+    borderRadius: 6,
+  },
+
   inputContainer: {
     height: 50,
     flexDirection: "row",
