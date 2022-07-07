@@ -32,8 +32,6 @@ export default function CreatePostsScreen({ navigation }) {
   const userId = useSelector(getUserId);
   const nickName = useSelector(getUserNickName);
 
-  console.log("userId :>> ", userId);
-  console.log("nickName :>> ", nickName);
   const [cameraRef, setCameraRef] = useState(null);
 
   const [photo, setPhoto] = useState(null);
@@ -114,10 +112,11 @@ export default function CreatePostsScreen({ navigation }) {
   };
 
   const sendPhoto = async () => {
-    console.log("createPost() :>> ", createPost());
     await createPost();
-    navigation.navigate("DefaultScreen", { photo });
-    // setPhoto(null);
+    await navigation.navigate("DefaultScreen");
+    setPhoto(null);
+    setComment("");
+    setLocation({});
   };
 
   return (
@@ -154,6 +153,7 @@ export default function CreatePostsScreen({ navigation }) {
           placeholder={"Name..."}
           placeholderTextColor="#BDBDBD"
           onChangeText={setComment}
+          value={comment}
           // onFocus={()=>{setIsShowKeyboard(true)}}
         />
         <View style={styles.locationInputWrap}>
