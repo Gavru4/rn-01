@@ -64,7 +64,7 @@ const HomeScreen = () => {
         name="Profile"
         component={ProfileScreen}
         options={{
-          // headerShown: false,
+          headerShown: false,
           tabBarIcon: ({ focused, size, color }) => {
             return (
               <Feather name="user" size={24} color="rgba(33, 33, 33, 0.8)" />
