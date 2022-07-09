@@ -65,7 +65,7 @@ export default function RegistrationScreen({ navigation }) {
     Dimensions.addEventListener("change", onChange);
     return () => {
       // Dimensions.removeEventListener("change", onChange);
-      Dimensions.remove(onChange);
+      Dimensions.remove();
     };
   }, []);
 

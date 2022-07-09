@@ -24,6 +24,8 @@ export const authSlice = createSlice({
     authSignOut: (state) => ({
       userId: null,
       nickName: null,
+      avatarImage: null,
+      userEmail: null,
       stateChangeUser: false,
     }),
   },
