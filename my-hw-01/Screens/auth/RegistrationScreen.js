@@ -17,12 +17,15 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
 } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 import { authSignUpUser } from "../../redux/auth/authOperation";
+import { AntDesign } from "@expo/vector-icons";
 
 const initialState = {
   login: "",
   email: "",
   password: "",
+  avatarImage: null,
 };
 
 export default function RegistrationScreen({ navigation }) {
@@ -41,6 +44,18 @@ export default function RegistrationScreen({ navigation }) {
     setForm(initialState);
   };
 
+  const pickImage = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+    if (!result.cancelled) {
+      setForm((prev) => ({ ...prev, avatarImage: result.uri }));
+    }
+  };
+
   useEffect(() => {
     const onChange = () => {
       const width = Dimensions.get("window").width - 16 * 2;
@@ -49,8 +64,8 @@ export default function RegistrationScreen({ navigation }) {
     };
     Dimensions.addEventListener("change", onChange);
     return () => {
-      Dimensions.removeEventListener("change", onChange);
-      // Dimensions.remove();
+      // Dimensions.removeEventListener("change", onChange);
+      Dimensions.remove(onChange);
     };
   }, []);
 
@@ -67,9 +82,23 @@ export default function RegistrationScreen({ navigation }) {
             source={require("../../assets/images/photoBG.jpg")}
           >
             <View style={styles.formWrap}>
-              <View style={styles.imgWrap}>
-                <Image />
-              </View>
+              <TouchableOpacity
+                style={styles.imgWrap}
+                onPress={() => pickImage()}
+              >
+                {form.avatarImage && (
+                  <Image
+                    source={{ uri: form.avatarImage }}
+                    style={{ width: 120, height: 120, borderRadius: 16 }}
+                  />
+                )}
+                <AntDesign
+                  name="pluscircleo"
+                  size={24}
+                  color="#FF6C00"
+                  style={styles.pluscircleo}
+                />
+              </TouchableOpacity>
               <View style={styles.headWrap}>
                 <Text style={styles.head}>Registration</Text>
               </View>
@@ -157,7 +186,6 @@ export default function RegistrationScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 140,
     backgroundColor: "#fff",
     justifyContent: "center",
   },
@@ -188,7 +216,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
     borderRadius: 16,
   },
-
+  pluscircleo: {
+    position: "absolute",
+    right: 0,
+    bottom: 20,
+  },
   headWrap: {
     alignItems: "center",
   },

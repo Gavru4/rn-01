@@ -21,7 +21,7 @@ export const authSignInUser =
   };
 
 export const authSignUpUser =
-  ({ login, email, password }) =>
+  ({ login, email, password, avatarImage }) =>
   async (dispatch, getState) => {
     try {
       const { user } = await createUserWithEmailAndPassword(
@@ -29,12 +29,19 @@ export const authSignUpUser =
         email,
         password
       );
-      const test = getAuth();
-      await updateProfile(test.currentUser, {
+      const getUser = getAuth();
+
+      await updateProfile(getUser.currentUser, {
         displayName: login,
+        photoURL: avatarImage,
       });
       dispatch(
-        updateUserProfile({ userId: user.uid, nickName: user.displayName })
+        updateUserProfile({
+          userId: user.uid,
+          nickName: user.displayName,
+          avatarImage,
+          userEmail: email,
+        })
       );
     } catch (error) {
       console.log(error.message);
@@ -53,11 +60,14 @@ export const authSignOutUser = () => async (dispatch, getState) => {
 export const authStateChangeUser = () => async (dispatch, getState) => {
   try {
     await onAuthStateChanged(auth, (currentUser) => {
+      console.log("currentUser :>> ", currentUser);
       if (currentUser) {
         dispatch(
           updateUserProfile({
             userId: currentUser.uid,
             nickName: currentUser.displayName,
+            avatarImage: currentUser.photoURL,
+            userEmail: currentUser.email,
           })
         );
         dispatch(authStateChange({ stateChangeUser: true }));

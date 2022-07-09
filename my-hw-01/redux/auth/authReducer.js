@@ -5,6 +5,8 @@ export const authSlice = createSlice({
   initialState: {
     userId: null,
     nickName: null,
+    avatarImage: null,
+    userEmail: null,
     stateChangeUser: false,
   },
   reducers: {
@@ -12,6 +14,8 @@ export const authSlice = createSlice({
       ...state,
       userId: payload.userId,
       nickName: payload.nickName,
+      avatarImage: payload.avatarImage,
+      userEmail: payload.userEmail,
     }),
     authStateChange: (state, { payload }) => ({
       ...state,

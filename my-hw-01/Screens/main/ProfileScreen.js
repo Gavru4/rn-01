@@ -80,7 +80,9 @@ const ProfileScreen = () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.inputWrap}
-                      onPress={() => {}}
+                      onPress={() => {
+                        setLikes((prev) => prev + 1);
+                      }}
                     >
                       <EvilIcons name="like" size={28} color="#FF6C00" />
                       <Text style={styles.likesInput}>{likes}</Text>

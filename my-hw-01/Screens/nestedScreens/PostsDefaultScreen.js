@@ -12,10 +12,19 @@ import {
 import { firestore } from "../../firebase/config";
 import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
+import {
+  getUserAvatarImage,
+  getUserNickName,
+  getUserEmail,
+} from "../../redux/auth/authSelectors";
 
 const PostsDefaultScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   const [userComments, setUserComments] = useState(0);
+  const userAvatar = useSelector(getUserAvatarImage);
+  const userNickName = useSelector(getUserNickName);
+  const userEmail = useSelector(getUserEmail);
 
   const getAllPosts = async () => {
     await firestore
@@ -32,10 +41,10 @@ const PostsDefaultScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.userInfoWrap}>
-        <Image style={styles.avatarWrap}></Image>
+        <Image style={styles.avatarWrap} source={{ uri: userAvatar }} />
         <View>
-          <Text style={styles.userLogin}>Login</Text>
-          <Text style={styles.userEmail}>Email</Text>
+          <Text style={styles.userLogin}>{userNickName}</Text>
+          <Text style={styles.userEmail}>{userEmail}</Text>
         </View>
       </View>
       <FlatList
@@ -80,15 +89,6 @@ const PostsDefaultScreen = ({ navigation }) => {
   );
 };
 
-// item :>>  Object {
-//   "comment": "Cncjfur",
-//   "id": "ojA5CVVn4CnTkG6FI9hT",
-//   "location": Object {},
-//   "nickName": "Test ",
-//   "userId": "i40aVNOa0icXz0onFHRsj5qdbe13",
-//   "userPhotoUrl": "https://firebasestorage.googleapis.com/v0/b/sociale-ec927.appspot.com/o/image%2F1657185872415?alt=media&token=1b53e8f8-5d78-4d54-8c2c-157ab244a966",
-// }
-
 const styles = StyleSheet.create({
   userInfoWrap: {
     marginVertical: 30,
@@ -100,9 +100,6 @@ const styles = StyleSheet.create({
     width: 60,
     borderRadius: 16,
     marginRight: 10,
-
-    borderColor: "red",
-    borderWidth: 2,
   },
   userLogin: {
     fontFamily: "Roboto-Bold",
