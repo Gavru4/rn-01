@@ -18,6 +18,7 @@ import {
   getUserNickName,
   getUserEmail,
 } from "../../redux/auth/authSelectors";
+import { async } from "@firebase/util";
 
 const PostsDefaultScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
@@ -25,6 +26,17 @@ const PostsDefaultScreen = ({ navigation }) => {
   const userAvatar = useSelector(getUserAvatarImage);
   const userNickName = useSelector(getUserNickName);
   const userEmail = useSelector(getUserEmail);
+
+  const getAllComments = async () => {
+    await firestore
+      .collection("posts")
+      // .doc(postId)
+      .collection("comments")
+      .onSnapshot((data) =>
+        setUserComments(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+      );
+    // await console.log("userComments :>> ", userComments);
+  };
 
   const getAllPosts = async () => {
     await firestore
@@ -36,6 +48,7 @@ const PostsDefaultScreen = ({ navigation }) => {
 
   useEffect(() => {
     getAllPosts();
+    getAllComments();
   }, []);
 
   return (

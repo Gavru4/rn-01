@@ -26,24 +26,38 @@ const CommentsScreen = ({ route }) => {
 
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
-  const [currentData, setCurrentData] = useState("");
 
   const nickName = useSelector(getUserNickName);
+
   const avatarImage = useSelector(getUserAvatarImage);
 
-  useEffect(() => {
+  // const addNewComment = async (postId) => {
+  //   if (newComment) {
+  //     await firestore
+  //       .collection("posts")
+  //       .doc(postId)
+  //       .update({
+  //         comments: [...comments, { comment: newComment, avatarImage }],
+  //       });
+  //     const data = await firestore.collection("posts").doc(id).get();
+  //     setComments(data.data().comments);
+  //     setNewComment("");
+  //   } else Alert.alert("Empty comment");
+  // };
+
+  useEffect(async () => {
     getAllComments();
   }, []);
-  console.log("cura :>> ", currentData);
 
   const createComments = async () => {
-    await getCurrentDate();
-    console.log("currentData :>> ", currentData);
+    const currentData = await getCurrentDate();
+
     await firestore
       .collection("posts")
       .doc(postId)
       .collection("comments")
-      .add({ comment, nickName, currentData });
+      .add({ comment, nickName, currentData, avatarImage });
+
     await setComment("");
     await setCurrentData("");
   };
@@ -55,7 +69,7 @@ const CommentsScreen = ({ route }) => {
     const hours = new Date().getHours();
     const min = new Date().getMinutes();
     const sec = new Date().getSeconds();
-    setCurrentData(
+    return (
       date + "/" + month + "/" + year + " " + hours + ":" + min + ":" + sec
     );
   };
@@ -87,12 +101,16 @@ const CommentsScreen = ({ route }) => {
               renderItem={({ item }) => (
                 <View style={styles.commentWrap}>
                   <Image
-                    source={{ uri: avatarImage }}
-                    style={{ width: 30, height: 30, borderRadius: 50 }}
+                    source={{ uri: item.avatarImage }}
+                    style={styles.userAvatar}
                   />
                   <View style={styles.commentContainer}>
-                    <Text>{item.comment}</Text>
-                    <Text>{item.currentData}</Text>
+                    <Text style={styles.userComment}>{item.comment}</Text>
+                    <View style={styles.userCommentDataWpar}>
+                      <Text style={styles.userCommentData}>
+                        {item.currentData}
+                      </Text>
+                    </View>
                   </View>
                 </View>
               )}
@@ -122,9 +140,8 @@ const CommentsScreen = ({ route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // justifyContent: "center",
     paddingHorizontal: 16,
-    // alignItems: "center",
+
     backgroundColor: "#FFFFFF",
   },
   userPhotoWrap: {
@@ -133,23 +150,47 @@ const styles = StyleSheet.create({
   },
   userPhoto: {
     height: 240,
-
     marginBottom: 10,
-
     borderRadius: 8,
   },
+  flatListContainer: {
+    // flex: 1,
+  },
   commentContainer: {
-    // width: "100%",
+    width: 270,
     marginBottom: 24,
     padding: 15,
-    alignContent: "flex-start",
-    marginRight: 15,
 
     backgroundColor: "rgba(0, 0, 0, 0.03)",
     borderRadius: 6,
   },
   commentWrap: {
     flexDirection: "row-reverse",
+  },
+
+  userAvatar: {
+    marginLeft: 15,
+    width: 30,
+    height: 30,
+    borderRadius: 50,
+  },
+
+  userComment: {
+    marginBottom: 10,
+
+    fontFamily: "Roboto-Regular",
+    fontSize: 13,
+
+    color: "#212121",
+  },
+  userCommentDataWpar: {
+    alignItems: "flex-end",
+  },
+  userCommentData: {
+    fontFamily: "Roboto-Regular",
+    fontSize: 10,
+
+    color: "#BDBDBD",
   },
 
   inputContainer: {

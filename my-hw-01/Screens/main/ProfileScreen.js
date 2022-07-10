@@ -16,6 +16,7 @@ import { firestore } from "../../firebase/config";
 import { Feather } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { getAuth } from "firebase/auth";
 // import { useDispatch } from "react-redux";
 // import { authSignOutUser } from "../../redux/auth/authOperation";
 
@@ -24,7 +25,7 @@ const ProfileScreen = () => {
   const userNickName = useSelector(getUserNickName);
   const [currentUserPost, setCurrentUserPost] = useState([]);
   const [userComments, setUserComments] = useState(0);
-  const [likes, setLikes] = useState(0);
+  // const [likes, setLikes] = useState(0);
 
   const getUserPosts = async () => {
     await firestore
@@ -34,9 +35,21 @@ const ProfileScreen = () => {
         setCurrentUserPost(data.docs.map((doc) => doc.data()))
       );
   };
+  const getLike = async () => {
+    console.log("userId :>> ", userId);
+    const getUser = getAuth();
+    console.log("get :>> ", getUser);
+    await firestore
+      .collection("comments")
+      .where("userId", "==", userId)
+      .update({
+        like: Number(data.data().like) ? Number(data.data().like) + 1 : 1,
+      });
+  };
 
   useEffect(() => {
     getUserPosts();
+    // getLike();
   }, []);
 
   return (
@@ -80,12 +93,12 @@ const ProfileScreen = () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.inputWrap}
-                      onPress={() => {
-                        setLikes((prev) => prev + 1);
-                      }}
+                      onPress={() => getLike()}
                     >
                       <EvilIcons name="like" size={28} color="#FF6C00" />
-                      <Text style={styles.likesInput}>{likes}</Text>
+                      <Text style={styles.likesInput}>
+                        {item.like ? item.like : 0}
+                      </Text>
                     </TouchableOpacity>
                   </View>
                   <TouchableOpacity

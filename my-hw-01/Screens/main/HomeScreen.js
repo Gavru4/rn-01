@@ -14,7 +14,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import PostsDefaultScreen from "../nestedScreens/PostsDefaultScreen";
 
 const HomeScreen = () => {
   // useEffect(()=>{const test = async () => {
