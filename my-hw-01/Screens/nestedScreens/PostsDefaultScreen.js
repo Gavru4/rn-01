@@ -18,7 +18,6 @@ import {
   getUserNickName,
   getUserEmail,
 } from "../../redux/auth/authSelectors";
-import { async } from "@firebase/util";
 
 const PostsDefaultScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
@@ -35,7 +34,6 @@ const PostsDefaultScreen = ({ navigation }) => {
       .onSnapshot((data) =>
         setUserComments(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
       );
-    // await console.log("userComments :>> ", userComments);
   };
 
   const getAllPosts = async () => {

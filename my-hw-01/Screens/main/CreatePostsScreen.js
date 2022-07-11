@@ -78,7 +78,6 @@ export default function CreatePostsScreen({ navigation }) {
   // };
 
   const uploadPhotoToServer = async () => {
-    // setModalVisible(!modalVisible);
     if (photo) {
       const response = await fetch(photo);
       const file = await response.blob();
@@ -93,20 +92,20 @@ export default function CreatePostsScreen({ navigation }) {
 
       return photoUrl;
     } else Alert.alert("No photo");
-    // setPostTitle("");
   };
 
   const createPost = async () => {
     const userPhotoUrl = await uploadPhotoToServer();
 
     // let location = await Location.getCurrentPositionAsync({});
+
     const createUserPost = await firestore.collection("posts").add({
-      // image: img,
       userPhotoUrl,
       comment,
       userId,
       nickName,
       location,
+      like: 0,
     });
     return createUserPost;
   };
@@ -163,10 +162,6 @@ export default function CreatePostsScreen({ navigation }) {
             // value={state.email}
             placeholder={"Location"}
             placeholderTextColor="#BDBDBD"
-            // onChangeText={(value) =>
-            //   setstate((prevState) => ({ ...prevState, email: value }))
-            // }
-            // onFocus={()=>{setIsShowKeyboard(true)}}
           />
         </View>
 

@@ -11,21 +11,19 @@ import {
 } from "react-native";
 import { useSelector } from "react-redux";
 import { getUserId, getUserNickName } from "../../redux/auth/authSelectors";
-// import { query, where } from "firebase/firestore";
-import { firestore } from "../../firebase/config";
+import { doc, updateDoc, increment } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { firestore, auth } from "../../firebase/config";
 import { Feather } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { getAuth } from "firebase/auth";
-// import { useDispatch } from "react-redux";
-// import { authSignOutUser } from "../../redux/auth/authOperation";
 
 const ProfileScreen = () => {
   const userId = useSelector(getUserId);
   const userNickName = useSelector(getUserNickName);
   const [currentUserPost, setCurrentUserPost] = useState([]);
   const [userComments, setUserComments] = useState(0);
-  // const [likes, setLikes] = useState(0);
+  const [likes, setLikes] = useState(0);
 
   const getUserPosts = async () => {
     await firestore
@@ -35,21 +33,26 @@ const ProfileScreen = () => {
         setCurrentUserPost(data.docs.map((doc) => doc.data()))
       );
   };
-  const getLike = async () => {
-    console.log("userId :>> ", userId);
+
+  const getLike = async (id) => {
     const getUser = getAuth();
-    console.log("get :>> ", getUser);
-    await firestore
-      .collection("comments")
-      .where("userId", "==", userId)
-      .update({
-        like: Number(data.data().like) ? Number(data.data().like) + 1 : 1,
-      });
+    console.log("getUser.currentUser :>> ", getUser.currentUser);
+    // await firestore
+    //   .collection("posts")
+    //   .doc("haL19xofV7Uw84Z8cdQT")
+    //   .update({ like: increment(1) });
+    const washingtonRef = await firestore
+      .collection("posts")
+      .doc()
+      .collection("posts")
+      .doc(id)
+      .update({ like: increment(1) });
+    //   .doc("haL19xofV7Uw84Z8cdQT")
+    console.log("washingtonRef :>> ", washingtonRef);
   };
 
   useEffect(() => {
     getUserPosts();
-    // getLike();
   }, []);
 
   return (
@@ -93,12 +96,10 @@ const ProfileScreen = () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.inputWrap}
-                      onPress={() => getLike()}
+                      onPress={() => getLike(item.userId)}
                     >
                       <EvilIcons name="like" size={28} color="#FF6C00" />
-                      <Text style={styles.likesInput}>
-                        {item.like ? item.like : 0}
-                      </Text>
+                      <Text style={styles.likesInput}>{item.like}</Text>
                     </TouchableOpacity>
                   </View>
                   <TouchableOpacity

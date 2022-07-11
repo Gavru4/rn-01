@@ -5,7 +5,7 @@ import {
   getAuth,
   updateProfile,
 } from "firebase/auth";
-import { auth, test } from "../../firebase/config.js";
+import { auth } from "../../firebase/config.js";
 import { updateUserProfile, authStateChange } from "./authReducer.js";
 import { onAuthStateChanged } from "firebase/auth";
 import { authSignOut } from "../../redux/auth/authReducer";

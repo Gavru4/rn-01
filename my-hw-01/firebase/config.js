@@ -23,6 +23,6 @@ export const auth = getAuth(app);
 // const auth = firebase.auth();
 const firestore = firebase.firestore();
 const storage = firebase.storage();
-const test = firebase.auth();
+const firebaseAuth = firebase.auth();
 
-export { firestore, storage, test };
+export { firestore, storage, firebaseAuth };
