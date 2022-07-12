@@ -9,7 +9,7 @@ import {
 
 import { Camera } from "expo-camera";
 import * as Location from "expo-location";
-// import storage from "@react-native-firebase/storage"; // 1
+import { Notify } from "notiflix/build/notiflix-notify-aio";
 import { firestore, storage } from "../../firebase/config";
 // import * as MediaLibrary from "expo-media-library";
 // const [type, setType] = useState(Camera.Constants.Type.back);
@@ -97,8 +97,6 @@ export default function CreatePostsScreen({ navigation }) {
   const createPost = async () => {
     const userPhotoUrl = await uploadPhotoToServer();
 
-    // let location = await Location.getCurrentPositionAsync({});
-
     const createUserPost = await firestore.collection("posts").add({
       userPhotoUrl,
       photoComment: comment,
@@ -114,7 +112,9 @@ export default function CreatePostsScreen({ navigation }) {
 
   const sendPhoto = async () => {
     await createPost();
+    // Notify.success("Sol lucet omnibus");
     await navigation.navigate("DefaultScreen");
+
     setPhoto(null);
     setComment("");
     setLocation({});

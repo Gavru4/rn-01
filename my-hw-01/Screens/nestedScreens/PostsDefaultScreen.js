@@ -21,7 +21,7 @@ import {
 
 const PostsDefaultScreen = ({ navigation }) => {
   const [posts, setPosts] = useState(null);
-  // const [userComments, setUserComments] = useState(0);
+
   const userAvatar = useSelector(getUserAvatarImage);
   const userNickName = useSelector(getUserNickName);
   const userEmail = useSelector(getUserEmail);
@@ -102,6 +102,10 @@ const PostsDefaultScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginHorizontal: 16,
+  },
   userInfoWrap: {
     marginVertical: 30,
     flexDirection: "row",
@@ -127,10 +131,6 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     fontSize: 11,
     color: "rgba(33, 33, 33, 0.8)",
-  },
-  container: {
-    flex: 1,
-    marginHorizontal: 16,
   },
 
   photoWrap: {

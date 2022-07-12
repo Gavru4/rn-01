@@ -7,13 +7,13 @@ import "firebase/compat/firestore";
 import "firebase/compat/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyApnrEG-wXlgmn5VKVyRKwiQR9q7QuqkEY",
-  authDomain: "sociale-ec927.firebaseapp.com",
-  projectId: "sociale-ec927",
-  storageBucket: "sociale-ec927.appspot.com",
-  messagingSenderId: "535348370943",
-  appId: "1:535348370943:web:165d21fcbe32e042d51bca",
-  measurementId: "G-J4ZSR874D9",
+  apiKey: "AIzaSyDliP88jo1590cVQmfIsq6Qw9R428eJ5K0",
+  authDomain: "react-native-app-3f7e7.firebaseapp.com",
+  projectId: "react-native-app-3f7e7",
+  storageBucket: "react-native-app-3f7e7.appspot.com",
+  messagingSenderId: "152772692100",
+  appId: "1:152772692100:web:dc78d2d07f1efaf9db1ad1",
+  measurementId: "G-ET0NC2GKS6",
 };
 
 const app = firebase.initializeApp(firebaseConfig);

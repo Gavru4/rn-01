@@ -22,7 +22,9 @@ const ProfileScreen = ({ navigation }) => {
   const userNickName = useSelector(getUserNickName);
 
   const [currentUserPost, setCurrentUserPost] = useState([]);
-  const [userComments, setUserComments] = useState([]);
+  const [userComments, setUserComments] = useState(
+    userComments ? userComments : 0
+  );
 
   const getUserPosts = async () => {
     await firestore
@@ -42,22 +44,14 @@ const ProfileScreen = ({ navigation }) => {
       .update({ like: increment(1) });
   };
 
-  const getNumberComments = () => {
-    firestore.collection("posts").doc();
+  const getNumberComments = async () => {
+    await firestore
+      .collection("posts")
+      .where("userId", "==", userId)
+      .onSnapshot((data) =>
+        data.docs.map((doc) => setUserComments(doc.data().comments))
+      );
   };
-
-  // const getNumberByComment = async () => {
-  //   console.log("currentUserPost.id :>> ", currentUserPost);
-  //   const id = await currentUserPost.map((el) => console.log("el >> ", el.id));
-
-  //   await firestore
-  //     .collection("posts")
-  //     .doc("0EbY9kB6S2F8cKInvEba")
-  //     .collection("comments")
-  //     .onSnapshot((data) =>
-  //       setUserComments(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-  //     );
-  // };
 
   useEffect(() => {
     getUserPosts();
@@ -93,6 +87,8 @@ const ProfileScreen = ({ navigation }) => {
                         navigation.navigate("Comments", {
                           postId: item.id,
                           uri: item.userPhotoUrl,
+                          postId: item.id,
+                          comments: userComments,
                         })
                       }
                     >
