@@ -7,7 +7,6 @@ export const authSlice = createSlice({
     nickName: null,
     avatarImage: null,
     userEmail: null,
-    allComments: [],
     stateChangeUser: false,
   },
   reducers: {
@@ -22,9 +21,6 @@ export const authSlice = createSlice({
       ...state,
       stateChangeUser: payload.stateChangeUser,
     }),
-    userComments: (state, { payload }) => {
-      allComments = [payload];
-    },
     authSignOut: (state) => ({
       userId: null,
       nickName: null,
@@ -35,5 +31,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { updateUserProfile, authStateChange, authSignOut, userComments } =
+export const { updateUserProfile, authStateChange, authSignOut } =
   authSlice.actions;

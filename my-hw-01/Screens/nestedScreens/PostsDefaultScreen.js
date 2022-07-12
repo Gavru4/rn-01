@@ -20,21 +20,21 @@ import {
 } from "../../redux/auth/authSelectors";
 
 const PostsDefaultScreen = ({ navigation }) => {
-  const [posts, setPosts] = useState([]);
-  const [userComments, setUserComments] = useState(0);
+  const [posts, setPosts] = useState(null);
+  // const [userComments, setUserComments] = useState(0);
   const userAvatar = useSelector(getUserAvatarImage);
   const userNickName = useSelector(getUserNickName);
   const userEmail = useSelector(getUserEmail);
 
-  const getAllComments = async () => {
-    await firestore
-      .collection("posts")
-      // .doc(postId)
-      .collection("comments")
-      .onSnapshot((data) =>
-        setUserComments(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-      );
-  };
+  // const getAllComments = async () => {
+  //   await firestore
+  //     .collection("posts")
+  //     // .doc(postId)
+  //     .collection("comments")
+  //     .onSnapshot((data) =>
+  //       setUserComments(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+  //     );
+  // };
 
   const getAllPosts = async () => {
     await firestore
@@ -46,7 +46,7 @@ const PostsDefaultScreen = ({ navigation }) => {
 
   useEffect(() => {
     getAllPosts();
-    getAllComments();
+    // getAllComments();
   }, []);
 
   return (
@@ -75,6 +75,7 @@ const PostsDefaultScreen = ({ navigation }) => {
                   navigation.navigate("Comments", {
                     postId: item.id,
                     uri: item.userPhotoUrl,
+                    comments: item.comments,
                   })
                 }
               >
@@ -83,7 +84,7 @@ const PostsDefaultScreen = ({ navigation }) => {
                   size={24}
                   color="black"
                 />
-                <Text style={styles.locationInput}>{userComments}</Text>
+                <Text style={styles.locationInput}>{item.comments.length}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.locationInputWrap}

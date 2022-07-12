@@ -18,55 +18,18 @@ import { firestore } from "../../firebase/config";
 
 import {
   getUserAvatarImage,
-  getUserComments,
   getUserNickName,
 } from "../../redux/auth/authSelectors";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { getAllComments } from "../../utils/comentsSelector";
 
 const CommentsScreen = ({ route }) => {
-  const { postId, uri } = route.params;
+  const { postId, uri, comments } = route.params;
 
   const [comment, setComment] = useState("");
-  const [allComments, setAllComments] = useState([]);
+  const [allComments, setAllComments] = useState(comments ? comments : []);
 
   const nickName = useSelector(getUserNickName);
-
-  const userComments = useSelector(getUserComments);
-  // console.log("userComments :>> ", userComments);
-
   const avatarImage = useSelector(getUserAvatarImage);
-
-  // const addNewComment = async (postId) => {
-  //   if (newComment) {
-  //     await firestore
-  //       .collection("posts")
-  //       .doc(postId)
-  //       .update({
-  //         comments: [...comments, { comment: newComment, avatarImage }],
-  //       });
-  //     const data = await firestore.collection("posts").doc(id).get();
-  //     setComments(data.data().comments);
-  //     setNewComment("");
-  //   } else Alert.alert("Empty comment");
-  // };
-
-  useEffect(() => {
-    getAllComments(postId);
-  }, []);
-
-  const createComments = async () => {
-    const currentData = await getCurrentDate();
-
-    await firestore
-      .collection("posts")
-      .doc(postId)
-      .collection("comments")
-      .add({ comment, nickName, currentData, avatarImage });
-
-    await setComment("");
-    await setCurrentData("");
-  };
 
   const getCurrentDate = () => {
     const date = new Date().getDate();
@@ -80,14 +43,36 @@ const CommentsScreen = ({ route }) => {
     );
   };
 
-  // const getAllComments = async () => {
+  const addNewComment = async () => {
+    const currentData = await getCurrentDate();
+
+    if (comment !== "") {
+      // const data = await firestore.collection("posts").doc(postId).get();
+      // console.log("data :>> ", data);
+
+      await firestore
+        .collection("posts")
+        .doc(postId)
+        .update({
+          comments: [...allComments, { comment, avatarImage, currentData }],
+        });
+      const data = await firestore.collection("posts").doc(postId).get();
+      await setAllComments(data.data().comments);
+      setComment("");
+    } else Alert.alert("Empty comment");
+  };
+
+  // const createComments = async () => {
+  //   const currentData = await getCurrentDate();
+
   //   await firestore
   //     .collection("posts")
   //     .doc(postId)
   //     .collection("comments")
-  //     .onSnapshot((data) =>
-  //       setAllComments(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-  //     );
+  //     .add({ comment, nickName, currentData, avatarImage });
+
+  //   await setComment("");
+  //   await setCurrentData("");
   // };
 
   return (
@@ -101,27 +86,30 @@ const CommentsScreen = ({ route }) => {
           <View style={styles.userPhotoWrap}>
             <Image source={{ uri }} style={styles.userPhoto} />
           </View>
+
           <SafeAreaView style={styles.flatListContainer}>
-            <FlatList
-              data={userComments}
-              renderItem={({ item }) => (
-                <View style={styles.commentWrap}>
-                  <Image
-                    source={{ uri: item.avatarImage }}
-                    style={styles.userAvatar}
-                  />
-                  <View style={styles.commentContainer}>
-                    <Text style={styles.userComment}>{item.comment}</Text>
-                    <View style={styles.userCommentDataWpar}>
-                      <Text style={styles.userCommentData}>
-                        {item.currentData}
-                      </Text>
+            {allComments && allComments.length !== 0 && (
+              <FlatList
+                data={allComments}
+                renderItem={({ item }) => (
+                  <View style={styles.commentWrap}>
+                    <Image
+                      source={{ uri: item.avatarImage }}
+                      style={styles.userAvatar}
+                    />
+                    <View style={styles.commentContainer}>
+                      <Text style={styles.userComment}>{item.comment}</Text>
+                      <View style={styles.userCommentDataWpar}>
+                        <Text style={styles.userCommentData}>
+                          {item.currentData}
+                        </Text>
+                      </View>
                     </View>
                   </View>
-                </View>
-              )}
-              keyExtractor={(item) => item.id}
-            />
+                )}
+                keyExtractor={(item) => item.id}
+              />
+            )}
           </SafeAreaView>
           <View style={styles.inputContainer}>
             <TextInput
@@ -131,7 +119,7 @@ const CommentsScreen = ({ route }) => {
               placeholder="Comments..."
             />
             <TouchableOpacity
-              onPress={() => createComments()}
+              onPress={() => addNewComment()}
               style={styles.arrow}
             >
               <FontAwesome5 name="arrow-circle-up" size={34} color="#FF6C00" />

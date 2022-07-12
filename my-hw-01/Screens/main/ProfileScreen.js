@@ -9,12 +9,8 @@ import {
   ImageBackground,
 } from "react-native";
 import { useSelector } from "react-redux";
-import {
-  getUserComments,
-  getUserId,
-  getUserNickName,
-} from "../../redux/auth/authSelectors";
-import { increment, collection, getDocs } from "firebase/firestore";
+import { getUserId, getUserNickName } from "../../redux/auth/authSelectors";
+import { increment } from "firebase/firestore";
 
 import { firestore } from "../../firebase/config";
 import { Feather } from "@expo/vector-icons";
@@ -24,10 +20,9 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 const ProfileScreen = ({ navigation }) => {
   const userId = useSelector(getUserId);
   const userNickName = useSelector(getUserNickName);
-  const [currentUserPost, setCurrentUserPost] = useState([]);
-  const [userComments, setUserComments] = useState(0);
 
-  // const userComments = useSelector(getUserComments);
+  const [currentUserPost, setCurrentUserPost] = useState([]);
+  const [userComments, setUserComments] = useState([]);
 
   const getUserPosts = async () => {
     await firestore
@@ -47,8 +42,26 @@ const ProfileScreen = ({ navigation }) => {
       .update({ like: increment(1) });
   };
 
+  const getNumberComments = () => {
+    firestore.collection("posts").doc();
+  };
+
+  // const getNumberByComment = async () => {
+  //   console.log("currentUserPost.id :>> ", currentUserPost);
+  //   const id = await currentUserPost.map((el) => console.log("el >> ", el.id));
+
+  //   await firestore
+  //     .collection("posts")
+  //     .doc("0EbY9kB6S2F8cKInvEba")
+  //     .collection("comments")
+  //     .onSnapshot((data) =>
+  //       setUserComments(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+  //     );
+  // };
+
   useEffect(() => {
     getUserPosts();
+    getNumberComments();
   }, []);
 
   return (
@@ -88,7 +101,9 @@ const ProfileScreen = ({ navigation }) => {
                         size={24}
                         color="#FF6C00"
                       />
-                      <Text style={styles.commentsInput}>{userComments}</Text>
+                      <Text style={styles.commentsInput}>
+                        {userComments.length}
+                      </Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.inputWrap}

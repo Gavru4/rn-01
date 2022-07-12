@@ -101,11 +101,12 @@ export default function CreatePostsScreen({ navigation }) {
 
     const createUserPost = await firestore.collection("posts").add({
       userPhotoUrl,
-      comment,
+      photoComment: comment,
       userId,
       nickName,
       location,
       like: 0,
+      comments: [],
     });
 
     return createUserPost;
