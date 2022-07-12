@@ -1,54 +1,50 @@
-import React, { useEffect, useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
   FlatList,
   Image,
-  Button,
   TouchableOpacity,
   ImageBackground,
 } from "react-native";
 import { useSelector } from "react-redux";
-import { getUserId, getUserNickName } from "../../redux/auth/authSelectors";
-import { doc, updateDoc, increment } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import { firestore, auth } from "../../firebase/config";
+import {
+  getUserComments,
+  getUserId,
+  getUserNickName,
+} from "../../redux/auth/authSelectors";
+import { increment, collection, getDocs } from "firebase/firestore";
+
+import { firestore } from "../../firebase/config";
 import { Feather } from "@expo/vector-icons";
 import { EvilIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ navigation }) => {
   const userId = useSelector(getUserId);
   const userNickName = useSelector(getUserNickName);
   const [currentUserPost, setCurrentUserPost] = useState([]);
   const [userComments, setUserComments] = useState(0);
-  const [likes, setLikes] = useState(0);
+
+  // const userComments = useSelector(getUserComments);
 
   const getUserPosts = async () => {
     await firestore
       .collection("posts")
       .where("userId", "==", userId)
       .onSnapshot((data) =>
-        setCurrentUserPost(data.docs.map((doc) => doc.data()))
+        setCurrentUserPost(
+          data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        )
       );
   };
 
   const getLike = async (id) => {
-    const getUser = getAuth();
-    console.log("getUser.currentUser :>> ", getUser.currentUser);
-    // await firestore
-    //   .collection("posts")
-    //   .doc("haL19xofV7Uw84Z8cdQT")
-    //   .update({ like: increment(1) });
-    const washingtonRef = await firestore
-      .collection("posts")
-      .doc()
+    await firestore
       .collection("posts")
       .doc(id)
       .update({ like: increment(1) });
-    //   .doc("haL19xofV7Uw84Z8cdQT")
-    console.log("washingtonRef :>> ", washingtonRef);
   };
 
   useEffect(() => {
@@ -96,7 +92,7 @@ const ProfileScreen = () => {
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.inputWrap}
-                      onPress={() => getLike(item.userId)}
+                      onPress={() => getLike(item.id)}
                     >
                       <EvilIcons name="like" size={28} color="#FF6C00" />
                       <Text style={styles.likesInput}>{item.like}</Text>

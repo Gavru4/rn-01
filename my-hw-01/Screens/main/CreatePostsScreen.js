@@ -107,6 +107,7 @@ export default function CreatePostsScreen({ navigation }) {
       location,
       like: 0,
     });
+
     return createUserPost;
   };
 

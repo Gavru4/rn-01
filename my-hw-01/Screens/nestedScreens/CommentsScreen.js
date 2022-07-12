@@ -15,11 +15,14 @@ import {
 } from "react-native";
 import { useSelector } from "react-redux";
 import { firestore } from "../../firebase/config";
+
 import {
   getUserAvatarImage,
+  getUserComments,
   getUserNickName,
 } from "../../redux/auth/authSelectors";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { getAllComments } from "../../utils/comentsSelector";
 
 const CommentsScreen = ({ route }) => {
   const { postId, uri } = route.params;
@@ -28,6 +31,9 @@ const CommentsScreen = ({ route }) => {
   const [allComments, setAllComments] = useState([]);
 
   const nickName = useSelector(getUserNickName);
+
+  const userComments = useSelector(getUserComments);
+  // console.log("userComments :>> ", userComments);
 
   const avatarImage = useSelector(getUserAvatarImage);
 
@@ -45,8 +51,8 @@ const CommentsScreen = ({ route }) => {
   //   } else Alert.alert("Empty comment");
   // };
 
-  useEffect(async () => {
-    getAllComments();
+  useEffect(() => {
+    getAllComments(postId);
   }, []);
 
   const createComments = async () => {
@@ -74,15 +80,15 @@ const CommentsScreen = ({ route }) => {
     );
   };
 
-  const getAllComments = async () => {
-    await firestore
-      .collection("posts")
-      .doc(postId)
-      .collection("comments")
-      .onSnapshot((data) =>
-        setAllComments(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-      );
-  };
+  // const getAllComments = async () => {
+  //   await firestore
+  //     .collection("posts")
+  //     .doc(postId)
+  //     .collection("comments")
+  //     .onSnapshot((data) =>
+  //       setAllComments(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
+  //     );
+  // };
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -97,7 +103,7 @@ const CommentsScreen = ({ route }) => {
           </View>
           <SafeAreaView style={styles.flatListContainer}>
             <FlatList
-              data={allComments}
+              data={userComments}
               renderItem={({ item }) => (
                 <View style={styles.commentWrap}>
                   <Image
