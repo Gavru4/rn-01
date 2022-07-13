@@ -23,6 +23,7 @@ const PostsDefaultScreen = ({ navigation }) => {
   const [posts, setPosts] = useState(null);
 
   const userAvatar = useSelector(getUserAvatarImage);
+  console.log("userAvatar :>> ", userAvatar);
   const userNickName = useSelector(getUserNickName);
   const userEmail = useSelector(getUserEmail);
 
@@ -84,14 +85,16 @@ const PostsDefaultScreen = ({ navigation }) => {
                   size={24}
                   color="black"
                 />
-                <Text style={styles.locationInput}>{item.comments.length}</Text>
+                <Text style={styles.commentsInput}>{item.comments.length}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.locationInputWrap}
                 onPress={() => navigation.navigate("Map", item.location)}
               >
                 <Feather name="map-pin" size={18} color="black" />
-                <Text style={styles.locationInput}>Location</Text>
+                <Text style={styles.locationInput}>
+                  {item.address.region},{item.address.city}
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -163,8 +166,15 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     marginTop: 10,
   },
+  commentsInput: {
+    marginLeft: 8,
+
+    fontFamily: "Roboto-Medium",
+    fontSize: 16,
+  },
   locationInput: {
     marginLeft: 8,
+
     fontFamily: "Roboto-Medium",
     fontSize: 16,
   },

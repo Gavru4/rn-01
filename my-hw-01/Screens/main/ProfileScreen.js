@@ -119,7 +119,9 @@ const ProfileScreen = ({ navigation }) => {
                       color="black"
                       style={{ justifyContent: "flex-end" }}
                     />
-                    <Text style={styles.mapInput}>Locati</Text>
+                    <Text style={styles.mapInput}>
+                      {item.address.city},{item.address.country}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>

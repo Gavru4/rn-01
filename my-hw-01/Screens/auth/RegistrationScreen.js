@@ -52,7 +52,10 @@ export default function RegistrationScreen({ navigation }) {
       quality: 1,
     });
     if (!result.cancelled) {
-      setForm((prev) => ({ ...prev, avatarImage: result.uri }));
+      setForm((prev) => ({
+        ...prev,
+        avatarImage: result.uri,
+      }));
     }
   };
 

@@ -30,11 +30,12 @@ export const authSignUpUser =
         password
       );
       const getUser = getAuth();
-
+      console.log("avatarImage :>> ", avatarImage);
       await updateProfile(getUser.currentUser, {
         displayName: login,
-        photoURL: avatarImage,
+        photoURL: avatarImage ? avatarImage : "../../assets/images/icon.png",
       });
+
       dispatch(
         updateUserProfile({
           userId: user.uid,

@@ -36,7 +36,8 @@ export default function CreatePostsScreen({ navigation }) {
 
   const [photo, setPhoto] = useState(null);
   const [comment, setComment] = useState("");
-  const [location, setLocation] = useState({});
+  const [location, setLocation] = useState(null);
+  const [address, setUserAddress] = useState(null);
 
   const takeUserPhoto = async () => {
     if (cameraRef) {
@@ -66,9 +67,17 @@ export default function CreatePostsScreen({ navigation }) {
         latitude: location.coords.latitude,
         longitude: location.coords.longitude,
       });
+
+      if (location) {
+        const { latitude, longitude } = location.coords;
+        const response = await Location.reverseGeocodeAsync({
+          latitude,
+          longitude,
+        });
+        await setUserAddress(...response);
+      }
     })();
   }, []);
-
   // const snap = async () => {
   //   if (takePhoto) {
   //     let file = await takePhoto.takePictureAsync();
@@ -105,6 +114,11 @@ export default function CreatePostsScreen({ navigation }) {
       location,
       like: 0,
       comments: [],
+      address: {
+        city: address.city,
+        country: address.country,
+        region: address.region,
+      },
     });
 
     return createUserPost;
@@ -117,8 +131,19 @@ export default function CreatePostsScreen({ navigation }) {
 
     setPhoto(null);
     setComment("");
-    setLocation({});
+    setLocation(null);
+    setUserAddress(null);
   };
+
+  //     "city": "Дніпро",
+  //     "country": "Україна",
+  //     "isoCountryCode": "UA",
+  //     "name": "Петра Калнишевського проспект, 22",
+  //     "region": "Дніпропетровська область",
+  //     "street": "Петра Калнишевського проспект",
+  //     "streetNumber": "22",
+  //     "subregion": "Дніпро",
+  //     "timezone": "Europe/Kiev",
 
   return (
     <KeyboardAvoidingView
@@ -161,7 +186,7 @@ export default function CreatePostsScreen({ navigation }) {
           <Feather name="map-pin" size={18} color="black" />
           <TextInput
             style={styles.locationInput}
-            // value={state.email}
+            value={address ? `${address.region} ,${address.country}` : ""}
             placeholder={"Location"}
             placeholderTextColor="#BDBDBD"
           />
