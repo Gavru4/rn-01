@@ -63,10 +63,6 @@ export default function CreatePostsScreen({ navigation }) {
       }
 
       const location = await Location.getCurrentPositionAsync({});
-      setLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
 
       if (location) {
         const { latitude, longitude } = location.coords;
@@ -76,6 +72,11 @@ export default function CreatePostsScreen({ navigation }) {
         });
         await setUserAddress(...response);
       }
+
+      setLocation({
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      });
     })();
   }, []);
   // const snap = async () => {
@@ -134,16 +135,6 @@ export default function CreatePostsScreen({ navigation }) {
     setLocation(null);
     setUserAddress(null);
   };
-
-  //     "city": "Дніпро",
-  //     "country": "Україна",
-  //     "isoCountryCode": "UA",
-  //     "name": "Петра Калнишевського проспект, 22",
-  //     "region": "Дніпропетровська область",
-  //     "street": "Петра Калнишевського проспект",
-  //     "streetNumber": "22",
-  //     "subregion": "Дніпро",
-  //     "timezone": "Europe/Kiev",
 
   return (
     <KeyboardAvoidingView

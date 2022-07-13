@@ -9,7 +9,11 @@ import {
   ImageBackground,
 } from "react-native";
 import { useSelector } from "react-redux";
-import { getUserId, getUserNickName } from "../../redux/auth/authSelectors";
+import {
+  getUserId,
+  getUserNickName,
+  getUserAvatarImage,
+} from "../../redux/auth/authSelectors";
 import { increment } from "firebase/firestore";
 
 import { firestore } from "../../firebase/config";
@@ -20,6 +24,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 const ProfileScreen = ({ navigation }) => {
   const userId = useSelector(getUserId);
   const userNickName = useSelector(getUserNickName);
+  const userAvatar = useSelector(getUserAvatarImage);
 
   const [currentUserPost, setCurrentUserPost] = useState([]);
   const [userComments, setUserComments] = useState(
@@ -67,7 +72,12 @@ const ProfileScreen = ({ navigation }) => {
         <View style={styles.flatListWrap}>
           <Text style={styles.user}>{userNickName}</Text>
           <View style={styles.imgWrap}>
-            <Image />
+            <Image
+              style={styles.avatar}
+              source={{
+                uri: userAvatar,
+              }}
+            />
           </View>
           <FlatList
             data={currentUserPost}
@@ -173,7 +183,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#F6F6F6",
     borderRadius: 16,
   },
-
+  avatar: {
+    height: 120,
+    width: 120,
+    borderRadius: 16,
+    marginRight: 10,
+  },
   photoWrap: {
     marginBottom: 35,
   },

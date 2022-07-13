@@ -30,10 +30,11 @@ export const authSignUpUser =
         password
       );
       const getUser = getAuth();
-      console.log("avatarImage :>> ", avatarImage);
       await updateProfile(getUser.currentUser, {
         displayName: login,
-        photoURL: avatarImage ? avatarImage : "../../assets/images/icon.png",
+        photoURL: avatarImage
+          ? avatarImage
+          : "https://cdn-icons-png.flaticon.com/512/1077/1077012.png",
       });
 
       dispatch(
@@ -66,7 +67,9 @@ export const authStateChangeUser = () => async (dispatch, getState) => {
           updateUserProfile({
             userId: currentUser.uid,
             nickName: currentUser.displayName,
-            avatarImage: currentUser.photoURL,
+            avatarImage: currentUser.photoURL
+              ? currentUser.photoURL
+              : "https://cdn-icons-png.flaticon.com/512/1077/1077012.png",
             userEmail: currentUser.email,
           })
         );

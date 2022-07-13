@@ -23,7 +23,7 @@ const PostsDefaultScreen = ({ navigation }) => {
   const [posts, setPosts] = useState(null);
 
   const userAvatar = useSelector(getUserAvatarImage);
-  console.log("userAvatar :>> ", userAvatar);
+
   const userNickName = useSelector(getUserNickName);
   const userEmail = useSelector(getUserEmail);
 
@@ -53,7 +53,12 @@ const PostsDefaultScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.userInfoWrap}>
-        <Image style={styles.avatarWrap} source={{ uri: userAvatar }} />
+        <Image
+          style={styles.avatarWrap}
+          source={{
+            uri: userAvatar,
+          }}
+        />
         <View>
           <Text style={styles.userLogin}>{userNickName}</Text>
           <Text style={styles.userEmail}>{userEmail}</Text>
