@@ -60,21 +60,22 @@ const CommentsScreen = ({ route }) => {
 
   return (
     // <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-    <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={0}
-      style={styles.container}
-    >
-      {/* <View style={styles.container}> */}
+    // <KeyboardAvoidingView
+    //   behavior={Platform.OS === "ios" ? "padding" : "height"}
+    //   // keyboardVerticalOffset={0}
+    //   // style={styles.keyboarContainer}
+    // >
+    <View style={styles.container}>
       <View style={styles.userPhotoWrap}>
         <Image source={{ uri }} style={styles.userPhoto} />
       </View>
 
-      {/* <SafeAreaView style={styles.flatListContainer}> */}
       {allComments && allComments.length !== 0 && (
+        // <SafeAreaView style={styles.flatListContainer}>
         <FlatList
           data={allComments}
           keyExtractor={(item) => item.id}
+          refreshing={true}
           renderItem={({ item }) => (
             <View style={styles.commentWrap}>
               <Image
@@ -90,8 +91,9 @@ const CommentsScreen = ({ route }) => {
             </View>
           )}
         />
+        // </SafeAreaView>
       )}
-      {/* </SafeAreaView> */}
+
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -103,13 +105,18 @@ const CommentsScreen = ({ route }) => {
           <FontAwesome5 name="arrow-circle-up" size={34} color="#FF6C00" />
         </TouchableOpacity>
       </View>
-      {/* </View> */}
-    </KeyboardAvoidingView>
+    </View>
+    // </KeyboardAvoidingView>
     // </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
+  keyboarContainer: {
+    // flex: 1,
+    // paddingHorizontal: 16,
+    // backgroundColor: "#FFFFFF",
+  },
   container: {
     flex: 1,
     paddingHorizontal: 16,
@@ -118,9 +125,10 @@ const styles = StyleSheet.create({
   },
 
   userPhotoWrap: {
-    flex: 1,
-    justifyContent: "flex-start",
-    marginTop: 30,
+    // flex: 1,
+    // justifyContent: "flex-start",
+    marginTop: 20,
+    marginBottom: 10,
   },
 
   userPhoto: {
@@ -128,9 +136,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 8,
   },
-  // flatListContainer: {
-  //   // flex: 1,
-  // },
+
+  flatListContainer: {
+    height: 200,
+  },
   commentContainer: {
     width: 300,
     marginBottom: 15,
@@ -139,6 +148,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.03)",
     borderRadius: 6,
   },
+
   commentWrap: {
     flexDirection: "row-reverse",
   },
@@ -178,6 +188,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingRight: 5,
     paddingHorizontal: 10,
+    marginTop: 15,
 
     backgroundColor: "#F6F6F6",
     borderWidth: 1,

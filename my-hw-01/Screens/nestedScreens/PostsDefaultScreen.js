@@ -2,11 +2,9 @@ import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
-  TextInput,
   StyleSheet,
   FlatList,
   Image,
-  Button,
   TouchableOpacity,
 } from "react-native";
 import { firestore } from "../../firebase/config";
