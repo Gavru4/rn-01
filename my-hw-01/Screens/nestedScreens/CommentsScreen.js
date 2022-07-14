@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -60,12 +60,13 @@ const CommentsScreen = ({ route }) => {
 
   return (
     // <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-    // <KeyboardAvoidingView
-    //   behavior={Platform.OS === "ios" ? "padding" : "height"}
-    //   // keyboardVerticalOffset={0}
-    //   // style={styles.keyboarContainer}
-    // >
+
     <View style={styles.container}>
+      {/* <KeyboardAvoidingView */}
+      {/* behavior={Platform.OS === "ios" ? "padding" : "height"}
+        keyboardVerticalOffset={0}
+        style={styles.keyboarContainer}
+      > */}
       <View style={styles.userPhotoWrap}>
         <Image source={{ uri }} style={styles.userPhoto} />
       </View>
@@ -75,7 +76,7 @@ const CommentsScreen = ({ route }) => {
         <FlatList
           data={allComments}
           keyExtractor={(item) => item.id}
-          refreshing={true}
+          initialScrollIndex={1}
           renderItem={({ item }) => (
             <View style={styles.commentWrap}>
               <Image
@@ -91,6 +92,7 @@ const CommentsScreen = ({ route }) => {
             </View>
           )}
         />
+
         // </SafeAreaView>
       )}
 
@@ -105,8 +107,8 @@ const CommentsScreen = ({ route }) => {
           <FontAwesome5 name="arrow-circle-up" size={34} color="#FF6C00" />
         </TouchableOpacity>
       </View>
+      {/* </KeyboardAvoidingView> */}
     </View>
-    // </KeyboardAvoidingView>
     // </TouchableWithoutFeedback>
   );
 };
