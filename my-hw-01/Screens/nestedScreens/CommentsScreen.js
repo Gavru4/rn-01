@@ -7,10 +7,10 @@ import {
   Text,
   TouchableOpacity,
   FlatList,
-  SafeAreaView,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from "react-native";
 import { useSelector } from "react-redux";
 import { firestore } from "../../firebase/config";
@@ -23,6 +23,10 @@ import { Notify } from "notiflix/build/notiflix-notify-aio";
 
 const CommentsScreen = ({ route }) => {
   const { postId, uri, comments } = route.params;
+
+  // const [dimensions, setDimensions] = useState(
+  //   Dimensions.get("window") - 16 * 2
+  // );
 
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState(comments ? comments : []);
@@ -58,67 +62,99 @@ const CommentsScreen = ({ route }) => {
     } else Notify.failure("Empty comment");
   };
 
+  // useEffect(() => {
+  //   const onChange = () => {
+  //     const width = Dimensions.get("window").width - 20 * 2;
+
+  //     setDimensions(width);
+  //   };
+  //   Dimensions.addEventListener("change", onChange);
+  //   return () => {
+  //     Dimensions.removeEventListener("change", onChange);
+  //     // Dimensions.remove();
+  //   };
+  // }, []);
+
+  const flatList = React.useRef(null);
   return (
-    // <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-
-    <View style={styles.container}>
-      {/* <KeyboardAvoidingView */}
-      {/* behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={0}
-        style={styles.keyboarContainer}
-      > */}
-      <View style={styles.userPhotoWrap}>
-        <Image source={{ uri }} style={styles.userPhoto} />
-      </View>
-
-      {allComments && allComments.length !== 0 && (
-        // <SafeAreaView style={styles.flatListContainer}>
-        <FlatList
-          data={allComments}
-          keyExtractor={(item) => item.id}
-          initialScrollIndex={1}
-          renderItem={({ item }) => (
-            <View style={styles.commentWrap}>
-              <Image
-                source={{ uri: item.avatarImage }}
-                style={styles.userAvatar}
-              />
-              <View style={styles.commentContainer}>
-                <Text style={styles.userComment}>{item.comment}</Text>
-                <View style={styles.userCommentDataWpar}>
-                  <Text style={styles.userCommentData}>{item.currentData}</Text>
-                </View>
-              </View>
+    <ScrollView keyboardShouldPersistTaps="handled">
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          keyboardVerticalOffset={90}
+          style={styles.keyboarContainer}
+        >
+          <View style={styles.container}>
+            <View style={styles.userPhotoWrap}>
+              <Image source={{ uri }} style={styles.userPhoto} />
             </View>
-          )}
-        />
 
-        // </SafeAreaView>
-      )}
+            {allComments && allComments.length !== 0 && (
+              <View style={{ width: "100%", flex: 1 }}>
+                {/* <View
+                  style={{ flex: 1 }}
+                  onStartShouldSetResponder={() => true}
+                > */}
+                <FlatList
+                  data={allComments}
+                  nestedScrollEnabled={true}
+                  keyboardShouldPersistTaps="always"
+                  keyExtractor={(item) => item.id}
+                  ref={flatList}
+                  onContentSizeChange={() => {
+                    flatList.current.scrollToEnd({ animated: true });
+                  }}
+                  renderItem={({ item }) => (
+                    <View style={styles.commentWrap}>
+                      <Image
+                        source={{ uri: item.avatarImage }}
+                        style={styles.userAvatar}
+                      />
+                      <View style={styles.commentContainer}>
+                        <Text style={styles.userComment}>{item.comment}</Text>
+                        <View style={styles.userCommentDataWpar}>
+                          <Text style={styles.userCommentData}>
+                            {item.currentData}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  )}
+                />
+                {/* </View> */}
+              </View>
+            )}
 
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          value={comment}
-          onChangeText={setComment}
-          placeholder="Comments..."
-        />
-        <TouchableOpacity onPress={() => addNewComment()} style={styles.arrow}>
-          <FontAwesome5 name="arrow-circle-up" size={34} color="#FF6C00" />
-        </TouchableOpacity>
-      </View>
-      {/* </KeyboardAvoidingView> */}
-    </View>
-    // </TouchableWithoutFeedback>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                value={comment}
+                onChangeText={setComment}
+                placeholder="Comments..."
+              />
+              <TouchableOpacity
+                onPress={() => addNewComment()}
+                style={styles.arrow}
+              >
+                <FontAwesome5
+                  name="arrow-circle-up"
+                  size={34}
+                  color="#FF6C00"
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
+    </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
   keyboarContainer: {
-    // flex: 1,
-    // paddingHorizontal: 16,
-    // backgroundColor: "#FFFFFF",
+    flex: 1,
   },
+
   container: {
     flex: 1,
     paddingHorizontal: 16,
@@ -140,7 +176,7 @@ const styles = StyleSheet.create({
   },
 
   flatListContainer: {
-    height: 200,
+    flex: 1,
   },
   commentContainer: {
     width: 300,
