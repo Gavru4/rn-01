@@ -27,9 +27,9 @@ const ProfileScreen = ({ navigation }) => {
   const userAvatar = useSelector(getUserAvatarImage);
 
   const [currentUserPost, setCurrentUserPost] = useState([]);
-  const [userComments, setUserComments] = useState(
-    userComments ? userComments : 0
-  );
+  // const [userComments, setUserComments] = useState(
+  //   userComments ? userComments : 0
+  // );
 
   const getUserPosts = async () => {
     await firestore
@@ -49,18 +49,18 @@ const ProfileScreen = ({ navigation }) => {
       .update({ like: increment(1) });
   };
 
-  const getNumberComments = async () => {
-    await firestore
-      .collection("posts")
-      .where("userId", "==", userId)
-      .onSnapshot((data) =>
-        data.docs.map((doc) => setUserComments(doc.data().comments))
-      );
-  };
+  // const getNumberComments = async () => {
+  //   await firestore
+  //     .collection("posts")
+  //     .where("userId", "==", userId)
+  //     .onSnapshot((data) =>
+  //       data.docs.map((doc) => setUserComments(doc.data().comments))
+  //     );
+  // };
 
   useEffect(() => {
     getUserPosts();
-    getNumberComments();
+    // getNumberComments();
   }, []);
 
   return (
@@ -98,7 +98,7 @@ const ProfileScreen = ({ navigation }) => {
                           postId: item.id,
                           uri: item.userPhotoUrl,
                           postId: item.id,
-                          comments: userComments,
+                          comments: item.comments,
                         })
                       }
                     >
@@ -108,7 +108,7 @@ const ProfileScreen = ({ navigation }) => {
                         color="#FF6C00"
                       />
                       <Text style={styles.commentsInput}>
-                        {userComments.length}
+                        {item.comments.length}
                       </Text>
                     </TouchableOpacity>
                     <TouchableOpacity

@@ -25,16 +25,6 @@ const PostsDefaultScreen = ({ navigation }) => {
   const userNickName = useSelector(getUserNickName);
   const userEmail = useSelector(getUserEmail);
 
-  // const getAllComments = async () => {
-  //   await firestore
-  //     .collection("posts")
-  //     // .doc(postId)
-  //     .collection("comments")
-  //     .onSnapshot((data) =>
-  //       setUserComments(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })))
-  //     );
-  // };
-
   const getAllPosts = async () => {
     await firestore
       .collection("posts")
@@ -45,7 +35,6 @@ const PostsDefaultScreen = ({ navigation }) => {
 
   useEffect(() => {
     getAllPosts();
-    // getAllComments();
   }, []);
 
   return (
@@ -96,7 +85,7 @@ const PostsDefaultScreen = ({ navigation }) => {
               >
                 <Feather name="map-pin" size={18} color="black" />
                 <Text style={styles.locationInput}>
-                  {item.address.region},{item.address.city}
+                  {item.address.region.slice(0, 20)},{item.address.city}
                 </Text>
               </TouchableOpacity>
             </View>

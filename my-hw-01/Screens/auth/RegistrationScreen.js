@@ -30,7 +30,9 @@ const initialState = {
 
 export default function RegistrationScreen({ navigation }) {
   const [form, setForm] = useState(initialState);
-  const [inputFocus, setInputFocus] = useState(false);
+  const [loginFocus, setLoginFocus] = useState(false);
+  const [emailFocus, setEmailFocus] = useState(false);
+  const [passwordFocus, setPasswordFocus] = useState(false);
   const [isSecureEntry, setIsSecureEntry] = useState(true);
 
   const [dimensions, setDimensions] = useState(
@@ -109,29 +111,29 @@ export default function RegistrationScreen({ navigation }) {
                 value={form.login}
                 style={[
                   styles.input,
-                  { borderColor: inputFocus ? "#FF6C00" : "#E8E8E8" },
+                  { borderColor: loginFocus ? "#FF6C00" : "#E8E8E8" },
                 ]}
                 placeholderTextColor="#BDBDBD"
                 placeholder="Login"
                 onChangeText={(value) =>
                   setForm((prevState) => ({ ...prevState, login: value }))
                 }
-                onFocus={() => setInputFocus(true)}
-                onBlur={() => setInputFocus(false)}
+                onFocus={() => setLoginFocus(true)}
+                onBlur={() => setLoginFocus(false)}
               ></TextInput>
               <TextInput
                 value={form.email}
                 style={[
                   styles.input,
-                  { borderColor: inputFocus ? "#FF6C00" : "#E8E8E8" },
+                  { borderColor: emailFocus ? "#FF6C00" : "#E8E8E8" },
                 ]}
                 placeholderTextColor="#BDBDBD"
                 placeholder="Email address"
                 onChangeText={(value) =>
                   setForm((prevState) => ({ ...prevState, email: value }))
                 }
-                onFocus={() => setInputFocus(true)}
-                onBlur={() => setInputFocus(false)}
+                onFocus={() => setEmailFocus(true)}
+                onBlur={() => setEmailFocus(false)}
               ></TextInput>
               <View style={styles.passwordWrap}>
                 <TextInput
@@ -139,15 +141,15 @@ export default function RegistrationScreen({ navigation }) {
                   value={form.password}
                   style={[
                     styles.input,
-                    { borderColor: inputFocus ? "#FF6C00" : "#E8E8E8" },
+                    { borderColor: passwordFocus ? "#FF6C00" : "#E8E8E8" },
                   ]}
                   placeholder="Password"
                   secureTextEntry={isSecureEntry}
                   onChangeText={(value) =>
                     setForm((prevState) => ({ ...prevState, password: value }))
                   }
-                  onFocus={() => setInputFocus(true)}
-                  onBlur={() => setInputFocus(false)}
+                  onFocus={() => setPasswordFocus(true)}
+                  onBlur={() => setPasswordFocus(false)}
                 ></TextInput>
                 <TouchableOpacity
                   style={styles.showHideText}
@@ -232,7 +234,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Medium",
     fontWeight: "bold",
     fontSize: 30,
-    // lineHeight: 35,
+
     letterSpacing: 0.01,
     color: "#212121",
   },
@@ -255,7 +257,7 @@ const styles = StyleSheet.create({
 
     fontFamily: "Roboto-Regular",
     fontSize: 16,
-    // line-height: 19px;
+
     color: "#1B4371",
   },
   registerBtn: {
@@ -284,7 +286,7 @@ const styles = StyleSheet.create({
   registerBtnText: {
     fontFamily: "Roboto-Regular",
     fontSize: 16,
-    // lineHeight: 1.2,
+
     color: "#FFFFFF",
   },
   singInBtn: {

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "my-hw-01",
-    "slug": "my-hw-01",
+    "name": "socials",
+    "slug": "socials",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/icon.png",
@@ -14,7 +14,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -26,6 +28,7 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "description": ""
   }
 }

@@ -9,16 +9,12 @@ import ProfileScreen from "./ProfileScreen";
 
 const MainTab = createBottomTabNavigator();
 
-/////  icons
 import { Ionicons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
 const HomeScreen = () => {
-  // useEffect(()=>{const test = async () => {
-  //   const visibility = await NavigationBar.getVisibilityAsync("hidden");
-  // }},)
   return (
     <MainTab.Navigator
       paddingTop="10"
@@ -48,7 +44,6 @@ const HomeScreen = () => {
         component={CreatePostsScreen}
         style={styles.container}
         options={{
-          // headerShown: false,
           tabBarIcon: ({ focused, size, color }) => {
             return (
               <TouchableOpacity style={styles.addBtnWrap}>
