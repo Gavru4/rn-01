@@ -70,35 +70,36 @@ const CommentsScreen = ({ route }) => {
           <Image source={{ uri }} style={styles.userPhoto} />
         </View>
 
-        {allComments && allComments.length !== 0 && (
-          // <View style={styles.flatListWrap}>
-          <FlatList
-            data={allComments}
-            keyExtractor={(item) => item.id}
-            // style={{ minHeight: 250 }}
-            ref={flatList}
-            onContentSizeChange={() => {
-              flatList.current.scrollToEnd({ animated: true });
-            }}
-            renderItem={({ item }) => (
-              <View style={styles.commentWrap}>
-                <Image
-                  source={{ uri: item.avatarImage }}
-                  style={styles.userAvatar}
-                />
-                <View style={styles.commentContainer}>
-                  <Text style={styles.userComment}>{item.comment}</Text>
-                  <View style={styles.userCommentDataWpar}>
-                    <Text style={styles.userCommentData}>
-                      {item.currentData}
-                    </Text>
+        <View style={styles.flatListContainer}>
+          {allComments && allComments.length !== 0 && (
+            <FlatList
+              data={allComments}
+              keyExtractor={(item) => item.id}
+              ref={flatList}
+              onContentSizeChange={() => {
+                flatList.current.scrollToEnd({ animated: true });
+              }}
+              renderItem={({ item }) => (
+                // <View style={styles.flatListWrap}>
+                <View style={styles.commentWrap}>
+                  <Image
+                    source={{ uri: item.avatarImage }}
+                    style={styles.userAvatar}
+                  />
+                  <View style={styles.commentContainer}>
+                    <Text style={styles.userComment}>{item.comment}</Text>
+                    <View style={styles.userCommentDataWpar}>
+                      <Text style={styles.userCommentData}>
+                        {item.currentData}
+                      </Text>
+                    </View>
                   </View>
                 </View>
-              </View>
-            )}
-          />
-          // </View>
-        )}
+                // </View>
+              )}
+            />
+          )}
+        </View>
 
         <View style={styles.inputContainer}>
           <TextInput
@@ -130,14 +131,12 @@ const styles = StyleSheet.create({
 
     backgroundColor: "#FFFFFF",
   },
-  flatListWrap: {
-    // height: 280,
-    // justifyContent: "flex-end",
+
+  flatListContainer: {
+    flex: 1,
   },
 
   userPhotoWrap: {
-    // flex: 1,
-
     marginTop: 20,
     marginBottom: 10,
   },
@@ -148,9 +147,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
 
-  flatListContainer: {
-    // flex: 1,
-  },
   commentContainer: {
     width: 300,
 

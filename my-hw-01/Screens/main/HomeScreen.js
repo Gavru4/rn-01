@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-// import * as NavigationBar from "expo-navigation-bar";
+// import * as navigationBar from "expo-navigation-bar";
 
 import PostsScreen from "../main/PostsScreen";
 import CreatePostsScreen from "./CreatePostsScreen";
@@ -14,7 +14,25 @@ import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
+  //   useEffect(() => {
+  //     const unsubscribe = navigation.addListener("tabPress", (e) => {
+  //       // Prevent default behavior
+  //       e.preventDefault();
+  //       tabBarStyle: {
+  //         flex: 1,
+  //         width: 70,
+  //         justifyContent: "center",
+  //         alignItems: "center",
+  //         color: "#FFFFFF",
+
+  //         borderRadius: 20,
+  //         backgroundColor: "#FF6C00",
+  //       },
+  //     });
+
+  //     return unsubscribe;
+  //   }, [navigation]);
   return (
     <MainTab.Navigator
       paddingTop="10"
@@ -28,13 +46,27 @@ const HomeScreen = () => {
         component={PostsScreen}
         options={{
           headerShown: false,
+
           tabBarIcon: ({ focused, size, color }) => {
             return (
-              <Ionicons
-                name="grid-outline"
-                size={24}
-                color="rgba(33, 33, 33, 0.8)"
-              />
+              <TouchableOpacity
+                style={
+                  focused
+                    ? styles.focusedBtnWrap
+                    : { color: "rgba(33, 33, 33, 0.8)" }
+                }
+              >
+                <Ionicons
+                  focused={true}
+                  name="grid-outline"
+                  size={24}
+                  style={
+                    focused
+                      ? { color: "#FFFFFF" }
+                      : { color: "rgba(33, 33, 33, 0.8)" }
+                  }
+                />
+              </TouchableOpacity>
             );
           },
         }}
@@ -44,10 +76,26 @@ const HomeScreen = () => {
         component={CreatePostsScreen}
         style={styles.container}
         options={{
+          tabBarShowIcon: true,
+
           tabBarIcon: ({ focused, size, color }) => {
             return (
-              <TouchableOpacity style={styles.addBtnWrap}>
-                <Entypo name="plus" size={24} color="#FFFFFF" />
+              <TouchableOpacity
+                style={
+                  focused
+                    ? styles.focusedBtnWrap
+                    : { color: "rgba(33, 33, 33, 0.8)" }
+                }
+              >
+                <Entypo
+                  name="plus"
+                  size={24}
+                  style={
+                    focused
+                      ? { color: "#FFFFFF" }
+                      : { color: "rgba(33, 33, 33, 0.8)" }
+                  }
+                />
               </TouchableOpacity>
             );
           },
@@ -61,7 +109,23 @@ const HomeScreen = () => {
           headerShown: false,
           tabBarIcon: ({ focused, size, color }) => {
             return (
-              <Feather name="user" size={24} color="rgba(33, 33, 33, 0.8)" />
+              <TouchableOpacity
+                style={
+                  focused
+                    ? styles.focusedBtnWrap
+                    : { color: "rgba(33, 33, 33, 0.8)" }
+                }
+              >
+                <Feather
+                  name="user"
+                  size={24}
+                  style={
+                    focused
+                      ? { color: "#FFFFFF" }
+                      : { color: "rgba(33, 33, 33, 0.8)" }
+                  }
+                />
+              </TouchableOpacity>
             );
           },
         }}
@@ -71,11 +135,12 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  addBtnWrap: {
+  focusedBtnWrap: {
     flex: 1,
     width: 70,
     justifyContent: "center",
     alignItems: "center",
+    color: "#FFFFFF",
 
     borderRadius: 20,
     backgroundColor: "#FF6C00",

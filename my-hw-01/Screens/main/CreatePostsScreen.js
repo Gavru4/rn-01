@@ -33,13 +33,27 @@ export default function CreatePostsScreen({ navigation }) {
 
   const takeUserPhoto = async () => {
     if (cameraRef) {
-      console.log("cameraRef :>> ", cameraRef);
       const { status } = await Camera.requestCameraPermissionsAsync();
       if (status === "granted") {
         const { uri } = await cameraRef.takePictureAsync();
 
         await setPhoto(uri);
-        const location = await Location.getCurrentPositionAsync({});
+        // const location = await Location.getCurrentPositionAsync({});
+
+        const userPosition = await Location.getCurrentPositionAsync({});
+
+        if (userPosition) {
+          const { latitude, longitude } = userPosition.coords;
+          const response = await Location.reverseGeocodeAsync({
+            latitude,
+            longitude,
+          });
+          await setUserAddress(...response);
+        }
+        setLocation({
+          latitude: userPosition.coords.latitude,
+          longitude: userPosition.coords.longitude,
+        });
       } else {
         Alert.alert("Access denied");
       }
@@ -55,21 +69,16 @@ export default function CreatePostsScreen({ navigation }) {
         return;
       }
 
-      const location = await Location.getCurrentPositionAsync({});
+      // const location = await Location.getCurrentPositionAsync({});
 
-      if (location) {
-        const { latitude, longitude } = location.coords;
-        const response = await Location.reverseGeocodeAsync({
-          latitude,
-          longitude,
-        });
-        await setUserAddress(...response);
-      }
-
-      setLocation({
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
-      });
+      // if (location) {
+      //   const { latitude, longitude } = location.coords;
+      //   const response = await Location.reverseGeocodeAsync({
+      //     latitude,
+      //     longitude,
+      //   });
+      //   await setUserAddress(...response);
+      // }
     })();
   }, []);
 
@@ -127,6 +136,12 @@ export default function CreatePostsScreen({ navigation }) {
     await createPost();
     await navigation.navigate("DefaultScreen");
 
+    setPhoto(null);
+    setComment("");
+    setLocation(null);
+    setUserAddress(null);
+  };
+  const delPostInform = () => {
     setPhoto(null);
     setComment("");
     setLocation(null);
@@ -192,7 +207,7 @@ export default function CreatePostsScreen({ navigation }) {
         </TouchableOpacity>
 
         <View style={styles.deleteBtnWrap}>
-          <TouchableOpacity style={styles.deleteBtn}>
+          <TouchableOpacity style={styles.deleteBtn} onPress={delPostInform}>
             <FontAwesome5 name="trash-alt" size={18} color="#BDBDBD" />
           </TouchableOpacity>
         </View>
@@ -294,6 +309,7 @@ const styles = StyleSheet.create({
   deleteBtnWrap: {
     alignItems: "center",
     justifyContent: "center",
+    marginTop: 60,
   },
 
   deleteBtn: {
@@ -302,7 +318,6 @@ const styles = StyleSheet.create({
 
     height: 40,
     width: 70,
-    marginTop: 80,
 
     backgroundColor: "#F6F6F6",
     borderRadius: 100,
